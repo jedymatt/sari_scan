@@ -19,6 +19,9 @@ It relies on barcode and is not for products without barcode such as eggs, onion
 
 ## Screenshots
 
-|                                            #1                                             |                                            #2                                             |
-|:-----------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------:|
-| ![image](https://github.com/user-attachments/assets/d6bc85ed-a2f3-421d-b319-e1cbd2dd2823) | ![image](https://github.com/user-attachments/assets/02fd48d1-6c6a-4513-b034-692c8f46c3aa) |
+<img width="1080" height="2400" alt="Screenshot_1770804618" src="https://github.com/user-attachments/assets/e1b5e16d-59ab-4f72-a4a1-2199c36283e0" />
+<img width="1080" height="2400" alt="Screenshot_1770804623" src="https://github.com/user-attachments/assets/43d5f815-6364-4684-afd5-2a42b5830010" />
+<img width="1080" height="2400" alt="Screenshot_1770804629" src="https://github.com/user-attachments/assets/8543069e-6225-41db-8dfb-f19afdf5fd07" />
+<img width="1080" height="2400" alt="Screenshot_1770804636" src="https://github.com/user-attachments/assets/fabccc92-c635-4706-8926-6afbff687d0e" />
+<img width="1080" height="2400" alt="Screenshot_1770804640" src="https://github.com/user-attachments/assets/252e1b6d-8642-4706-84f2-f4d6998ea429" />
+
