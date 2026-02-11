@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:sari_scan/components/product_detail_overlay_content.dart';
 import 'package:sari_scan/db.dart';
+import 'package:sari_scan/pages/product_management/edit_product_page.dart';
 import 'package:sari_scan/pages/product_management/register_product_page.dart';
 
 class CameraPage extends StatefulWidget {
@@ -16,7 +17,7 @@ class CameraPage extends StatefulWidget {
 class _CameraPageState extends State<CameraPage> {
   MobileScannerController cameraController = MobileScannerController(
     facing: CameraFacing.back,
-    autoStart: false, // we will start it manually in initState
+    autoStart: false,
   );
   Barcode? barcode;
   StreamSubscription<Object?>? _subscription;
@@ -25,7 +26,6 @@ class _CameraPageState extends State<CameraPage> {
   @override
   void initState() {
     _subscription = cameraController.barcodes.listen(_handleBarcodes);
-
     super.initState();
     unawaited(cameraController.start());
   }
@@ -55,6 +55,9 @@ class _CameraPageState extends State<CameraPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     late final scanWindow = Rect.fromCenter(
       center: MediaQuery.sizeOf(context).center(const Offset(0, -100)),
       width: MediaQuery.sizeOf(context).width,
@@ -69,12 +72,6 @@ class _CameraPageState extends State<CameraPage> {
             controller: cameraController,
             fit: BoxFit.cover,
             scanWindow: scanWindow,
-            // rectangle scan window designed for barcode scanning
-            // scanWindow: Rect.fromCenter(
-            //   center: MediaQuery.of(context).size.center(Offset.zero),
-            //   width: 250,
-            //   height: 100,
-            // ),
           ),
           ScanWindowOverlay(
             controller: cameraController,
@@ -84,51 +81,132 @@ class _CameraPageState extends State<CameraPage> {
             boxFit: BoxFit.cover,
             controller: cameraController,
           ),
+          // Top bar
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.black.withValues(alpha: 0.6),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+              child: SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Scan Barcode',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // Bottom panel
           Column(
             children: [
               const Spacer(),
               FutureBuilder(
-                  future: queryProducts(),
-                  builder: (context, asyncSnapshot) {
-                    final data = asyncSnapshot.data ?? [];
+                future: queryProducts(),
+                builder: (context, asyncSnapshot) {
+                  final data = asyncSnapshot.data ?? [];
 
-                    return StreamBuilder<BarcodeCapture>(
-                      stream: cameraController.barcodes,
-                      builder: (context, snapshot) {
-                        final code = barcode?.rawValue;
-                        if (code == null) {
-                          return const SizedBox.shrink();
-                        }
+                  return StreamBuilder<BarcodeCapture>(
+                    stream: cameraController.barcodes,
+                    builder: (context, snapshot) {
+                      final code = barcode?.rawValue;
+                      if (code == null) {
+                        // Idle hint
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(24, 0, 24, 48),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withValues(alpha: 0.5),
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.qr_code_scanner,
+                                    color: Colors.white70, size: 20),
+                                SizedBox(width: 8),
+                                Text(
+                                  'Point camera at a barcode',
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
 
-                        final product =
-                            data.where((p) => p.barcode == code).firstOrNull;
-                        if (product == null) {
-                          // No product found
-                          // Register?
-                          return Column(
+                      final product =
+                          data.where((p) => p.barcode == code).firstOrNull;
+                      if (product == null) {
+                        // Product not found
+                        return _BottomCard(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Container(
-                                color: Colors.black.withValues(alpha: 0.4),
-                                padding: const EdgeInsets.all(16),
-                                child: const Text(
-                                  'Product not found',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                                width: 48,
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  color: colorScheme.errorContainer,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(Icons.search_off,
+                                    color: colorScheme.onErrorContainer),
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                'Product not found',
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              ElevatedButton(
+                              Text(
+                                'Barcode: $code',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              FilledButton.icon(
                                 onPressed: () {
-                                  // Navigate to add_product_page.dart
                                   cameraController.stop();
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => RegisterProductPage(
+                                      builder: (context) =>
+                                          RegisterProductPage(
                                         barcode: code,
                                         format: barcode!.format,
                                       ),
@@ -136,24 +214,67 @@ class _CameraPageState extends State<CameraPage> {
                                   );
                                   cameraController.start();
                                 },
-                                child: const Text('Register Product'),
+                                icon: const Icon(Icons.add),
+                                label: const Text('Register Product'),
                               ),
-                              const SizedBox(height: 24),
                             ],
-                          );
-                        }
-
-                        return ProductDetailOverlayContent(
-                          productName: product.name,
-                          price: product.price,
+                          ),
                         );
-                      },
-                    );
-                  }),
+                      }
+
+                      return ProductDetailOverlayContent(
+                        productName: product.name,
+                        price: product.price,
+                        onEdit: () async {
+                          await cameraController.stop();
+                          if (context.mounted) {
+                            await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    EditProductPage(product: product),
+                              ),
+                            );
+                          }
+                          if (mounted) setState(() {});
+                          await cameraController.start();
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
             ],
-          )
+          ),
         ],
       ),
+    );
+  }
+}
+
+class _BottomCard extends StatelessWidget {
+  final Widget child;
+
+  const _BottomCard({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 32),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 16,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
+      child: child,
     );
   }
 }

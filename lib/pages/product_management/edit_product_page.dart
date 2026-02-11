@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart' hide Barcode;
-import 'package:barcode_widget/barcode_widget.dart';
-import 'package:sari_scan/core/mobile_scanner_format_to_barcode_widget.dart';
 import 'package:sari_scan/db.dart';
 import 'package:sari_scan/models.dart';
 
-class RegisterProductPage extends StatefulWidget {
-  const RegisterProductPage({
-    super.key,
-    required this.barcode,
-    required this.format,
-  });
-  final String barcode;
-  final BarcodeFormat format;
+class EditProductPage extends StatefulWidget {
+  const EditProductPage({super.key, required this.product});
+
+  final Product product;
 
   @override
-  State<RegisterProductPage> createState() => _RegisterProductPageState();
+  State<EditProductPage> createState() => _EditProductPageState();
 }
 
-class _RegisterProductPageState extends State<RegisterProductPage> {
+class _EditProductPageState extends State<EditProductPage> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _priceController = TextEditingController();
+  late final TextEditingController _nameController;
+  late final TextEditingController _priceController;
   bool _saving = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.product.name);
+    _priceController =
+        TextEditingController(text: widget.product.price.toString());
+  }
 
   @override
   void dispose() {
@@ -31,22 +32,51 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
     super.dispose();
   }
 
+  Future<void> _delete() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Product'),
+        content:
+            Text('Are you sure you want to delete "${widget.product.name}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    await deleteProduct(widget.product.id!);
+
+    if (!mounted) return;
+    Navigator.of(context).pop(true);
+  }
+
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _saving = true);
 
-    await insertProduct(Product(
+    final updated = widget.product.copyWith(
       name: _nameController.text.trim(),
       price: num.parse(_priceController.text.trim()),
-      barcode: widget.barcode,
-    ));
+    );
+
+    await updateProduct(updated);
 
     if (!mounted) return;
-
-    Navigator.of(context)
-      ..pop()
-      ..pop();
+    Navigator.of(context).pop(true);
   }
 
   @override
@@ -56,7 +86,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Register Product'),
+        title: const Text('Edit Product'),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -67,21 +97,29 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
             ),
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: Column(
+              child: Row(
                 children: [
-                  BarcodeWidget(
-                    data: widget.barcode,
-                    barcode:
-                        mobileScannerFormatToBarcodeWidget(widget.format),
-                    width: 200,
-                    height: 80,
+                  Icon(
+                    Icons.qr_code,
+                    color: colorScheme.onSurfaceVariant,
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    widget.barcode,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Barcode',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      Text(
+                        widget.product.barcode,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -151,7 +189,21 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                       color: Colors.white,
                     ),
                   )
-                : const Text('Save Product'),
+                : const Text('Save Changes'),
+          ),
+          const SizedBox(height: 12),
+          OutlinedButton.icon(
+            onPressed: _delete,
+            icon: const Icon(Icons.delete_outline),
+            label: const Text('Delete Product'),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: colorScheme.error,
+              side: BorderSide(color: colorScheme.error),
+              minimumSize: const Size.fromHeight(48),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
           ),
         ],
       ),

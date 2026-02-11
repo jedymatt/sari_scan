@@ -28,10 +28,6 @@ Future<List<Product>> queryProducts() async {
 
   final productsMap = await db.query('products');
 
-  for (var element in productsMap) {
-    print(Product.fromMap(element));
-  }
-
   return productsMap.map((e) => Product.fromMap(e)).toList();
 }
 
@@ -41,5 +37,26 @@ Future<void> insertProduct(Product product) async {
   await db.insert(
     'products',
     product.toMap(),
+  );
+}
+
+Future<void> updateProduct(Product product) async {
+  var db = await getDbClient();
+
+  await db.update(
+    'products',
+    product.toMap(),
+    where: 'id = ?',
+    whereArgs: [product.id],
+  );
+}
+
+Future<void> deleteProduct(int id) async {
+  var db = await getDbClient();
+
+  await db.delete(
+    'products',
+    where: 'id = ?',
+    whereArgs: [id],
   );
 }
