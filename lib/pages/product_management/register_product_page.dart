@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sari_scan/l10n/app_localizations.dart';
 import 'package:mobile_scanner/mobile_scanner.dart' hide Barcode;
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:sari_scan/core/mobile_scanner_format_to_barcode_widget.dart';
@@ -53,10 +54,11 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Register Product'),
+        title: Text(l10n.registerProduct),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -95,7 +97,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                 TextFormField(
                   controller: _nameController,
                   decoration: InputDecoration(
-                    labelText: 'Product Name',
+                    labelText: l10n.productName,
                     prefixIcon: const Icon(Icons.inventory_2_outlined),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -103,7 +105,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter a product name';
+                      return l10n.pleaseEnterProductName;
                     }
                     return null;
                   },
@@ -112,7 +114,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                 TextFormField(
                   controller: _priceController,
                   decoration: InputDecoration(
-                    labelText: 'Price',
+                    labelText: l10n.price,
                     prefixIcon: const Icon(Icons.payments_outlined),
                     prefixText: '₱ ',
                     border: OutlineInputBorder(
@@ -122,10 +124,10 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter a price';
+                      return l10n.pleaseEnterPrice;
                     }
                     if (num.tryParse(value.trim()) == null) {
-                      return 'Please enter a valid number';
+                      return l10n.pleaseEnterValidNumber;
                     }
                     return null;
                   },
@@ -151,7 +153,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                       color: Colors.white,
                     ),
                   )
-                : const Text('Save Product'),
+                : Text(l10n.saveProduct),
           ),
         ],
       ),

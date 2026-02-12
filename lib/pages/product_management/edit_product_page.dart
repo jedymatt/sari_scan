@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sari_scan/l10n/app_localizations.dart';
 import 'package:sari_scan/db.dart';
 import 'package:sari_scan/models.dart';
 
@@ -33,23 +34,23 @@ class _EditProductPageState extends State<EditProductPage> {
   }
 
   Future<void> _delete() async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Product'),
-        content:
-            Text('Are you sure you want to delete "${widget.product.name}"?'),
+        title: Text(l10n.deleteProduct),
+        content: Text(l10n.confirmDeleteProduct(widget.product.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: FilledButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
-            child: const Text('Delete'),
+            child: Text(l10n.delete),
           ),
         ],
       ),
@@ -83,10 +84,11 @@ class _EditProductPageState extends State<EditProductPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Product'),
+        title: Text(l10n.editProduct),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -108,7 +110,7 @@ class _EditProductPageState extends State<EditProductPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Barcode',
+                        l10n.barcode,
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                         ),
@@ -133,7 +135,7 @@ class _EditProductPageState extends State<EditProductPage> {
                 TextFormField(
                   controller: _nameController,
                   decoration: InputDecoration(
-                    labelText: 'Product Name',
+                    labelText: l10n.productName,
                     prefixIcon: const Icon(Icons.inventory_2_outlined),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -141,7 +143,7 @@ class _EditProductPageState extends State<EditProductPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter a product name';
+                      return l10n.pleaseEnterProductName;
                     }
                     return null;
                   },
@@ -150,7 +152,7 @@ class _EditProductPageState extends State<EditProductPage> {
                 TextFormField(
                   controller: _priceController,
                   decoration: InputDecoration(
-                    labelText: 'Price',
+                    labelText: l10n.price,
                     prefixIcon: const Icon(Icons.payments_outlined),
                     prefixText: '₱ ',
                     border: OutlineInputBorder(
@@ -160,10 +162,10 @@ class _EditProductPageState extends State<EditProductPage> {
                   keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter a price';
+                      return l10n.pleaseEnterPrice;
                     }
                     if (num.tryParse(value.trim()) == null) {
-                      return 'Please enter a valid number';
+                      return l10n.pleaseEnterValidNumber;
                     }
                     return null;
                   },
@@ -189,13 +191,13 @@ class _EditProductPageState extends State<EditProductPage> {
                       color: Colors.white,
                     ),
                   )
-                : const Text('Save Changes'),
+                : Text(l10n.saveChanges),
           ),
           const SizedBox(height: 12),
           OutlinedButton.icon(
             onPressed: _delete,
             icon: const Icon(Icons.delete_outline),
-            label: const Text('Delete Product'),
+            label: Text(l10n.deleteProduct),
             style: OutlinedButton.styleFrom(
               foregroundColor: colorScheme.error,
               side: BorderSide(color: colorScheme.error),

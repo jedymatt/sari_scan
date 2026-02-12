@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sari_scan/l10n/app_localizations.dart';
 import 'package:sari_scan/core/currency.dart';
 
 class ProductDetailOverlayContent extends StatelessWidget {
@@ -17,6 +18,7 @@ class ProductDetailOverlayContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       width: double.infinity,
@@ -67,7 +69,7 @@ class ProductDetailOverlayContent extends StatelessWidget {
             TextButton.icon(
               onPressed: onEdit,
               icon: const Icon(Icons.edit),
-              label: const Text('Edit'),
+              label: Text(l10n.edit),
             ),
           ],
         ],

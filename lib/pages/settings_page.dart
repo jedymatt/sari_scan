@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sari_scan/l10n/app_localizations.dart';
 import 'package:sari_scan/main.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -7,15 +8,52 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentMode = MyApp.themeMode(context);
+    final currentLocale = MyApp.locale(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(l10n.settings)),
       body: ListView(
         children: [
+          // Language section
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Text(
-              'Appearance',
+              l10n.language,
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ),
+          RadioGroup<Locale?>(
+            groupValue: currentLocale,
+            onChanged: (locale) {
+              MyApp.setLocale(context, locale);
+            },
+            child: Column(
+              children: [
+                RadioListTile<Locale?>(
+                  title: Text(l10n.systemDefault),
+                  value: null,
+                ),
+                RadioListTile<Locale?>(
+                  title: Text(l10n.english),
+                  value: const Locale('en'),
+                ),
+                RadioListTile<Locale?>(
+                  title: Text(l10n.cebuano),
+                  value: const Locale('ceb'),
+                ),
+              ],
+            ),
+          ),
+          const Divider(height: 32),
+          // Appearance section
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Text(
+              l10n.appearance,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                     fontWeight: FontWeight.w600,
@@ -30,15 +68,15 @@ class SettingsPage extends StatelessWidget {
             child: Column(
               children: [
                 RadioListTile<ThemeMode>(
-                  title: const Text('System default'),
+                  title: Text(l10n.systemDefault),
                   value: ThemeMode.system,
                 ),
                 RadioListTile<ThemeMode>(
-                  title: const Text('Light'),
+                  title: Text(l10n.light),
                   value: ThemeMode.light,
                 ),
                 RadioListTile<ThemeMode>(
-                  title: const Text('Dark'),
+                  title: Text(l10n.dark),
                   value: ThemeMode.dark,
                 ),
               ],
