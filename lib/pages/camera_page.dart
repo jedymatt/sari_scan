@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:sari_scan/l10n/app_localizations.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:sari_scan/components/product_detail_overlay_content.dart';
 import 'package:sari_scan/db.dart';
@@ -57,6 +58,7 @@ class _CameraPageState extends State<CameraPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     late final scanWindow = Rect.fromCenter(
       center: MediaQuery.sizeOf(context).center(const Offset(0, -100)),
@@ -110,7 +112,7 @@ class _CameraPageState extends State<CameraPage> {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        'Scan Barcode',
+                        l10n.scanBarcode,
                         style: theme.textTheme.titleMedium?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -146,16 +148,16 @@ class _CameraPageState extends State<CameraPage> {
                               color: Colors.black.withValues(alpha: 0.5),
                               borderRadius: BorderRadius.circular(24),
                             ),
-                            child: const Row(
+                            child: Row(
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.qr_code_scanner,
+                                const Icon(Icons.qr_code_scanner,
                                     color: Colors.white70, size: 20),
-                                SizedBox(width: 8),
+                                const SizedBox(width: 8),
                                 Text(
-                                  'Point camera at a barcode',
-                                  style: TextStyle(
+                                  l10n.pointCameraAtBarcode,
+                                  style: const TextStyle(
                                     color: Colors.white70,
                                     fontSize: 14,
                                   ),
@@ -186,14 +188,14 @@ class _CameraPageState extends State<CameraPage> {
                               ),
                               const SizedBox(height: 12),
                               Text(
-                                'Product not found',
+                                l10n.productNotFound,
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'Barcode: $code',
+                                l10n.barcodeWithValue(code),
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: colorScheme.onSurfaceVariant,
                                 ),
@@ -215,7 +217,7 @@ class _CameraPageState extends State<CameraPage> {
                                   cameraController.start();
                                 },
                                 icon: const Icon(Icons.add),
-                                label: const Text('Register Product'),
+                                label: Text(l10n.registerProduct),
                               ),
                             ],
                           ),

@@ -1,0 +1,227 @@
+{
+  "@@locale": "en",
+  "appTitle": "Sari Scan",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+
+  "greeting": "Good day!",
+  "@greeting": {
+    "description": "Greeting message on home page"
+  },
+
+  "totalProducts": "Total Products",
+  "@totalProducts": {
+    "description": "Label for product count card"
+  },
+
+  "scanBarcode": "Scan Barcode",
+  "@scanBarcode": {
+    "description": "Label for scan barcode action"
+  },
+
+  "lookupProductPrices": "Look up product prices",
+  "@lookupProductPrices": {
+    "description": "Subtitle for scan barcode action"
+  },
+
+  "manageProducts": "Manage Products",
+  "@manageProducts": {
+    "description": "Label for manage products action"
+  },
+
+  "addEditRemoveProducts": "Add, edit, or remove products",
+  "@addEditRemoveProducts": {
+    "description": "Subtitle for manage products action"
+  },
+
+  "mgaUtang": "Mga Utang",
+  "@mgaUtang": {
+    "description": "Credit tracking feature label (Filipino term)"
+  },
+
+  "comingSoon": "Coming Soon",
+  "@comingSoon": {
+    "description": "Placeholder for upcoming features"
+  },
+
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings page title"
+  },
+
+  "appearance": "Appearance",
+  "@appearance": {
+    "description": "Appearance settings section"
+  },
+
+  "systemDefault": "System default",
+  "@systemDefault": {
+    "description": "Theme option for system default"
+  },
+
+  "light": "Light",
+  "@light": {
+    "description": "Light theme option"
+  },
+
+  "dark": "Dark",
+  "@dark": {
+    "description": "Dark theme option"
+  },
+
+  "pointCameraAtBarcode": "Point camera at a barcode",
+  "@pointCameraAtBarcode": {
+    "description": "Hint shown when no barcode is detected"
+  },
+
+  "productNotFound": "Product not found",
+  "@productNotFound": {
+    "description": "Message when scanned barcode has no product"
+  },
+
+  "barcode": "Barcode",
+  "@barcode": {
+    "description": "Barcode label"
+  },
+
+  "barcodeWithValue": "Barcode: {value}",
+  "@barcodeWithValue": {
+    "description": "Barcode label with value",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+
+  "registerProduct": "Register Product",
+  "@registerProduct": {
+    "description": "Register product button and page title"
+  },
+
+  "edit": "Edit",
+  "@edit": {
+    "description": "Edit button label"
+  },
+
+  "editProduct": "Edit Product",
+  "@editProduct": {
+    "description": "Edit product page title"
+  },
+
+  "productName": "Product Name",
+  "@productName": {
+    "description": "Product name field label"
+  },
+
+  "price": "Price",
+  "@price": {
+    "description": "Price field label"
+  },
+
+  "pleaseEnterProductName": "Please enter a product name",
+  "@pleaseEnterProductName": {
+    "description": "Validation error for empty product name"
+  },
+
+  "pleaseEnterPrice": "Please enter a price",
+  "@pleaseEnterPrice": {
+    "description": "Validation error for empty price"
+  },
+
+  "pleaseEnterValidNumber": "Please enter a valid number",
+  "@pleaseEnterValidNumber": {
+    "description": "Validation error for invalid number"
+  },
+
+  "saveProduct": "Save Product",
+  "@saveProduct": {
+    "description": "Save button for new product"
+  },
+
+  "saveChanges": "Save Changes",
+  "@saveChanges": {
+    "description": "Save button for editing product"
+  },
+
+  "deleteProduct": "Delete Product",
+  "@deleteProduct": {
+    "description": "Delete product button and dialog title"
+  },
+
+  "confirmDeleteProduct": "Are you sure you want to delete \"{productName}\"?",
+  "@confirmDeleteProduct": {
+    "description": "Confirmation message for deleting product",
+    "placeholders": {
+      "productName": {
+        "type": "String"
+      }
+    }
+  },
+
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button label"
+  },
+
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete button label in confirmation dialog"
+  },
+
+  "productDeleted": "{productName} deleted",
+  "@productDeleted": {
+    "description": "Snackbar message after deleting product",
+    "placeholders": {
+      "productName": {
+        "type": "String"
+      }
+    }
+  },
+
+  "searchByNameOrBarcode": "Search by name or barcode",
+  "@searchByNameOrBarcode": {
+    "description": "Search field hint text"
+  },
+
+  "noProductsYet": "No products yet",
+  "@noProductsYet": {
+    "description": "Empty state title"
+  },
+
+  "scanBarcodeToAddFirstProduct": "Scan a barcode to add your first product",
+  "@scanBarcodeToAddFirstProduct": {
+    "description": "Empty state subtitle"
+  },
+
+  "productCount": "{count, plural, =1{1 product} other{{count} products}}",
+  "@productCount": {
+    "description": "Product count with plural support",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "noMatchingProducts": "No matching products",
+  "@noMatchingProducts": {
+    "description": "Empty search results message"
+  },
+
+  "language": "Language",
+  "@language": {
+    "description": "Language settings section"
+  },
+
+  "english": "English",
+  "@english": {
+    "description": "English language option"
+  },
+
+  "cebuano": "Cebuano",
+  "@cebuano": {
+    "description": "Cebuano language option"
+  }
+}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sari_scan/l10n/app_localizations.dart';
 import 'package:sari_scan/core/currency.dart';
 import 'package:sari_scan/db.dart';
 import 'package:sari_scan/models.dart';
@@ -49,22 +50,23 @@ class _ManageProductsPageState extends State<ManageProductsPage> {
   }
 
   Future<void> _confirmDelete(Product product) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Product'),
-        content: Text('Are you sure you want to delete "${product.name}"?'),
+        title: Text(l10n.deleteProduct),
+        content: Text(l10n.confirmDeleteProduct(product.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: FilledButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
-            child: const Text('Delete'),
+            child: Text(l10n.delete),
           ),
         ],
       ),
@@ -76,7 +78,7 @@ class _ManageProductsPageState extends State<ManageProductsPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${product.name} deleted'),
+            content: Text(l10n.productDeleted(product.name)),
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -89,10 +91,11 @@ class _ManageProductsPageState extends State<ManageProductsPage> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final filtered = _filteredProducts;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Manage Products'),
+        title: Text(l10n.manageProducts),
         actions: [
           IconButton(
             icon: const Icon(Icons.qr_code_scanner),
@@ -105,7 +108,7 @@ class _ManageProductsPageState extends State<ManageProductsPage> {
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
             child: TextField(
               decoration: InputDecoration(
-                hintText: 'Search by name or barcode',
+                hintText: l10n.searchByNameOrBarcode,
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
                 fillColor: colorScheme.surfaceContainerHighest,
@@ -126,6 +129,8 @@ class _ManageProductsPageState extends State<ManageProductsPage> {
 
   Widget _buildBody(
       ThemeData theme, ColorScheme colorScheme, List<Product> filtered) {
+    final l10n = AppLocalizations.of(context)!;
+
     if (_products == null) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -143,14 +148,14 @@ class _ManageProductsPageState extends State<ManageProductsPage> {
                 size: 64, color: colorScheme.onSurfaceVariant),
             const SizedBox(height: 16),
             Text(
-              'No products yet',
+              l10n.noProductsYet,
               style: theme.textTheme.titleMedium?.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: 4),
             Text(
-              'Scan a barcode to add your first product',
+              l10n.scanBarcodeToAddFirstProduct,
               style: mutedStyle,
             ),
           ],
@@ -164,7 +169,7 @@ class _ManageProductsPageState extends State<ManageProductsPage> {
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
           child: Text(
-            '${filtered.length} product${filtered.length == 1 ? '' : 's'}',
+            l10n.productCount(filtered.length),
             style: mutedStyle,
           ),
         ),
@@ -172,7 +177,7 @@ class _ManageProductsPageState extends State<ManageProductsPage> {
           child: filtered.isEmpty
               ? Center(
                   child: Text(
-                    'No matching products',
+                    l10n.noMatchingProducts,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: colorScheme.onSurfaceVariant,
                     ),

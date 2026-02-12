@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sari_scan/l10n/app_localizations.dart';
 import 'package:sari_scan/db.dart';
 import 'package:sari_scan/pages/camera_page.dart';
 import 'package:sari_scan/pages/product_management/manage_products_page.dart';
@@ -38,6 +39,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: SafeArea(
@@ -55,7 +57,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Sari Scan',
+                    l10n.appTitle,
                     style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -75,7 +77,7 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Magandang araw!',
+                l10n.greeting,
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -85,22 +87,22 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 24),
               _ActionCard(
                 icon: Icons.qr_code_scanner,
-                title: 'Scan Barcode',
-                subtitle: 'Look up product prices',
+                title: l10n.scanBarcode,
+                subtitle: l10n.lookupProductPrices,
                 onTap: () => _navigateAndRefresh(const CameraPage()),
               ),
               const SizedBox(height: 12),
               _ActionCard(
                 icon: Icons.inventory_2,
-                title: 'Manage Products',
-                subtitle: 'Add, edit, or remove products',
+                title: l10n.manageProducts,
+                subtitle: l10n.addEditRemoveProducts,
                 onTap: () => _navigateAndRefresh(const ManageProductsPage()),
               ),
               const SizedBox(height: 12),
-              const _ActionCard(
+              _ActionCard(
                 icon: Icons.receipt_long,
-                title: 'Mga Utang',
-                subtitle: 'Coming Soon',
+                title: l10n.mgaUtang,
+                subtitle: l10n.comingSoon,
                 disabled: true,
               ),
             ],
@@ -120,6 +122,7 @@ class _ProductCountCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Card(
       color: colorScheme.primaryContainer,
@@ -138,7 +141,7 @@ class _ProductCountCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Total Products',
+                  l10n.totalProducts,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: colorScheme.onPrimaryContainer,
                   ),
