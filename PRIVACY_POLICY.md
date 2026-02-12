@@ -102,7 +102,7 @@ When you uninstall the app, all data is automatically removed from your device.
 
 If you have any questions or concerns about this privacy policy or the app's data practices, please contact us at:
 
-**Email**: [Your Email Address Here]
+**Email**: sari-scan@jedymatt.dev
 
 ## Compliance
 
