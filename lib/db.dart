@@ -1,62 +1,50 @@
-import 'package:sari_scan/models.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:drift/drift.dart';
+import 'package:sari_scan/database.dart';
+import 'package:sari_scan/models.dart' as models;
 
-Future<void> _onCreate(Database db, int version) async {
-  await db.execute('''
-    CREATE TABLE products (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT,
-      price REAL,
-      barcode TEXT
-    )
-  ''');
+// Singleton database instance
+AppDatabase? _database;
+
+AppDatabase _getDatabase() {
+  _database ??= AppDatabase();
+  return _database!;
 }
 
-Future<Database> getDbClient() async {
-  // await deleteDatabase('sari_scan.db');
-  var db = await openDatabase(
-    'sari_scan.db',
-    onCreate: _onCreate,
-    version: 1,
-  );
+Future<List<models.Product>> queryProducts() async {
+  final db = _getDatabase();
+  final results = await db.select(db.products).get();
 
-  return db;
+  return results.map((row) => models.Product(
+    id: row.id,
+    name: row.name,
+    price: row.price,
+    barcode: row.barcode,
+  )).toList();
 }
 
-Future<List<Product>> queryProducts() async {
-  var db = await getDbClient();
+Future<void> insertProduct(models.Product product) async {
+  final db = _getDatabase();
 
-  final productsMap = await db.query('products');
-
-  return productsMap.map((e) => Product.fromMap(e)).toList();
+  await db.into(db.products).insert(ProductsCompanion.insert(
+    name: product.name,
+    price: product.price.toDouble(),
+    barcode: product.barcode,
+  ));
 }
 
-Future<void> insertProduct(Product product) async {
-  var db = await getDbClient();
+Future<void> updateProduct(models.Product product) async {
+  final db = _getDatabase();
 
-  await db.insert(
-    'products',
-    product.toMap(),
-  );
-}
-
-Future<void> updateProduct(Product product) async {
-  var db = await getDbClient();
-
-  await db.update(
-    'products',
-    product.toMap(),
-    where: 'id = ?',
-    whereArgs: [product.id],
-  );
+  await (db.update(db.products)..where((p) => p.id.equals(product.id!)))
+      .write(ProductsCompanion(
+    name: Value(product.name),
+    price: Value(product.price.toDouble()),
+    barcode: Value(product.barcode),
+  ));
 }
 
 Future<void> deleteProduct(int id) async {
-  var db = await getDbClient();
+  final db = _getDatabase();
 
-  await db.delete(
-    'products',
-    where: 'id = ?',
-    whereArgs: [id],
-  );
+  await (db.delete(db.products)..where((p) => p.id.equals(id))).go();
 }
