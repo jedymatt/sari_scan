@@ -1,0 +1,6 @@
+[tools]
+node = "lts"
+uv = "latest"
+
+[shell_alias]
+claude = "claude --permission-mode bypassPermissions"
