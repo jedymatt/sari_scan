@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sari_scan/l10n/app_localizations.dart';
 import 'package:sari_scan/core/currency.dart';
+import 'package:sari_scan/core/date_format.dart';
 import 'package:sari_scan/db.dart';
 import 'package:sari_scan/models.dart';
 import 'package:sari_scan/pages/mga_utang/add_entry_sheet.dart';
@@ -251,8 +252,21 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
                                       : colorScheme.primary,
                                 ),
                               ),
-                              subtitle:
-                                  entry.note != null ? Text(entry.note!) : null,
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (entry.note != null) Text(entry.note!),
+                                  if (entry.createdAt != null)
+                                    Text(
+                                      entryDateTimeFormat
+                                          .format(entry.createdAt!),
+                                      style:
+                                          theme.textTheme.bodySmall?.copyWith(
+                                        color: colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+                                ],
+                              ),
                             );
                           },
                         ),
