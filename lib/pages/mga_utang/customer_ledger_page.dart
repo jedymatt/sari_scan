@@ -222,13 +222,19 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: colorScheme.onSurfaceVariant,
                               )))
-                      : ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                      : ListView.separated(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
                           itemCount: _entries!.length,
+                          separatorBuilder: (context, index) =>
+                              const Divider(height: 1),
                           itemBuilder: (context, index) {
                             final entry = _entries![index];
                             final isDebt = entry.type == UtangType.debt;
                             return ListTile(
+                              contentPadding:
+                                  const EdgeInsets.symmetric(vertical: 8),
+                              isThreeLine: entry.note != null,
                               leading: CircleAvatar(
                                 backgroundColor: isDebt
                                     ? colorScheme.errorContainer
@@ -256,6 +262,9 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   if (entry.note != null) Text(entry.note!),
+                                  if (entry.note != null &&
+                                      entry.createdAt != null)
+                                    const SizedBox(height: 4),
                                   if (entry.createdAt != null)
                                     Text(
                                       entryDateTimeFormat
