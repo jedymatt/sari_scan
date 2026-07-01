@@ -146,4 +146,105 @@ class AppLocalizationsCeb extends AppLocalizations {
 
   @override
   String get cebuano => 'Binisaya';
+
+  @override
+  String get mgaUtangSubtitle => 'Subaya ang utang sa mga suki';
+
+  @override
+  String get customers => 'Mga Suki';
+
+  @override
+  String get noCustomersYet => 'Wala pay suki';
+
+  @override
+  String get addFirstCustomer =>
+      'Pagdugang ug suki aron masugdan ang pagsubay sa utang';
+
+  @override
+  String get searchCustomers => 'Pangitaa ang suki';
+
+  @override
+  String get noMatchingCustomers => 'Walay katugbang nga suki';
+
+  @override
+  String get totalOutstanding => 'Kinatibuk-ang Utang';
+
+  @override
+  String get active => 'Aktibo';
+
+  @override
+  String get archived => 'Naka-archive';
+
+  @override
+  String get addCustomer => 'Dugang Suki';
+
+  @override
+  String get editCustomer => 'Usba ang Suki';
+
+  @override
+  String get customerName => 'Ngalan';
+
+  @override
+  String get pleaseEnterCustomerName => 'Palihug pagbutang ug ngalan';
+
+  @override
+  String get phoneOptional => 'Telepono (opsyonal)';
+
+  @override
+  String get saveCustomer => 'I-save ang Suki';
+
+  @override
+  String get addUtang => 'Dugang Utang';
+
+  @override
+  String get addBayad => 'Dugang Bayad';
+
+  @override
+  String get balance => 'Balanse';
+
+  @override
+  String get settled => 'Bayad na';
+
+  @override
+  String get amount => 'Kantidad';
+
+  @override
+  String get pleaseEnterAmount => 'Palihug pagbutang ug kantidad';
+
+  @override
+  String get pleaseEnterValidAmount =>
+      'Pagbutang ug kantidad nga labaw sa zero';
+
+  @override
+  String get noteOptional => 'Nota (opsyonal)';
+
+  @override
+  String get save => 'I-save';
+
+  @override
+  String get archive => 'I-archive';
+
+  @override
+  String get unarchive => 'I-unarchive';
+
+  @override
+  String get deleteCustomer => 'Papasa ang Suki';
+
+  @override
+  String confirmDeleteCustomer(String name) {
+    return 'Papason si $name ug tanan niyang utang?';
+  }
+
+  @override
+  String customerDeleted(String name) {
+    return 'Gipapas si $name';
+  }
+
+  @override
+  String get noEntriesYet => 'Wala pay utang o bayad';
+
+  @override
+  String customerCount(int count) {
+    return '$count ka suki';
+  }
 }

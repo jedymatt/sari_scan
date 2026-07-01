@@ -223,5 +223,175 @@
   "cebuano": "Cebuano",
   "@cebuano": {
     "description": "Cebuano language option"
+  },
+
+  "mgaUtangSubtitle": "Track customer debts",
+  "@mgaUtangSubtitle": {
+    "description": "Subtitle for the Mga Utang home card"
+  },
+
+  "customers": "Customers",
+  "@customers": {
+    "description": "Customer list section title"
+  },
+
+  "noCustomersYet": "No customers yet",
+  "@noCustomersYet": {
+    "description": "Empty state title for customer list"
+  },
+
+  "addFirstCustomer": "Add a customer to start tracking utang",
+  "@addFirstCustomer": {
+    "description": "Empty state subtitle"
+  },
+
+  "searchCustomers": "Search customers",
+  "@searchCustomers": {
+    "description": "Customer search hint"
+  },
+
+  "noMatchingCustomers": "No matching customers",
+  "@noMatchingCustomers": {
+    "description": "No search results"
+  },
+
+  "totalOutstanding": "Total Outstanding",
+  "@totalOutstanding": {
+    "description": "Label for total owed"
+  },
+
+  "active": "Active",
+  "@active": {
+    "description": "Active customers filter"
+  },
+
+  "archived": "Archived",
+  "@archived": {
+    "description": "Archived customers filter"
+  },
+
+  "addCustomer": "Add Customer",
+  "@addCustomer": {
+    "description": "Add customer title"
+  },
+
+  "editCustomer": "Edit Customer",
+  "@editCustomer": {
+    "description": "Edit customer title"
+  },
+
+  "customerName": "Name",
+  "@customerName": {
+    "description": "Customer name field label"
+  },
+
+  "pleaseEnterCustomerName": "Please enter a name",
+  "@pleaseEnterCustomerName": {
+    "description": "Name validation error"
+  },
+
+  "phoneOptional": "Phone (optional)",
+  "@phoneOptional": {
+    "description": "Phone field label"
+  },
+
+  "saveCustomer": "Save Customer",
+  "@saveCustomer": {
+    "description": "Save customer button"
+  },
+
+  "addUtang": "Add Utang",
+  "@addUtang": {
+    "description": "Add debt button"
+  },
+
+  "addBayad": "Add Bayad",
+  "@addBayad": {
+    "description": "Add payment button"
+  },
+
+  "balance": "Balance",
+  "@balance": {
+    "description": "Balance label"
+  },
+
+  "settled": "Settled",
+  "@settled": {
+    "description": "Zero balance label"
+  },
+
+  "amount": "Amount",
+  "@amount": {
+    "description": "Amount field label"
+  },
+
+  "pleaseEnterAmount": "Please enter an amount",
+  "@pleaseEnterAmount": {
+    "description": "Amount required error"
+  },
+
+  "pleaseEnterValidAmount": "Enter an amount greater than zero",
+  "@pleaseEnterValidAmount": {
+    "description": "Amount positivity error"
+  },
+
+  "noteOptional": "Note (optional)",
+  "@noteOptional": {
+    "description": "Note field label"
+  },
+
+  "save": "Save",
+  "@save": {
+    "description": "Generic save button"
+  },
+
+  "archive": "Archive",
+  "@archive": {
+    "description": "Archive action"
+  },
+
+  "unarchive": "Unarchive",
+  "@unarchive": {
+    "description": "Unarchive action"
+  },
+
+  "deleteCustomer": "Delete Customer",
+  "@deleteCustomer": {
+    "description": "Delete customer action"
+  },
+
+  "confirmDeleteCustomer": "Delete {name} and all their utang records?",
+  "@confirmDeleteCustomer": {
+    "description": "Delete confirmation",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+
+  "customerDeleted": "{name} deleted",
+  "@customerDeleted": {
+    "description": "Delete snackbar",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+
+  "noEntriesYet": "No utang or bayad yet",
+  "@noEntriesYet": {
+    "description": "Empty ledger state"
+  },
+
+  "customerCount": "{count} customers",
+  "@customerCount": {
+    "description": "Customer count label",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

@@ -145,4 +145,103 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cebuano => 'Cebuano';
+
+  @override
+  String get mgaUtangSubtitle => 'Track customer debts';
+
+  @override
+  String get customers => 'Customers';
+
+  @override
+  String get noCustomersYet => 'No customers yet';
+
+  @override
+  String get addFirstCustomer => 'Add a customer to start tracking utang';
+
+  @override
+  String get searchCustomers => 'Search customers';
+
+  @override
+  String get noMatchingCustomers => 'No matching customers';
+
+  @override
+  String get totalOutstanding => 'Total Outstanding';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get archived => 'Archived';
+
+  @override
+  String get addCustomer => 'Add Customer';
+
+  @override
+  String get editCustomer => 'Edit Customer';
+
+  @override
+  String get customerName => 'Name';
+
+  @override
+  String get pleaseEnterCustomerName => 'Please enter a name';
+
+  @override
+  String get phoneOptional => 'Phone (optional)';
+
+  @override
+  String get saveCustomer => 'Save Customer';
+
+  @override
+  String get addUtang => 'Add Utang';
+
+  @override
+  String get addBayad => 'Add Bayad';
+
+  @override
+  String get balance => 'Balance';
+
+  @override
+  String get settled => 'Settled';
+
+  @override
+  String get amount => 'Amount';
+
+  @override
+  String get pleaseEnterAmount => 'Please enter an amount';
+
+  @override
+  String get pleaseEnterValidAmount => 'Enter an amount greater than zero';
+
+  @override
+  String get noteOptional => 'Note (optional)';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get archive => 'Archive';
+
+  @override
+  String get unarchive => 'Unarchive';
+
+  @override
+  String get deleteCustomer => 'Delete Customer';
+
+  @override
+  String confirmDeleteCustomer(String name) {
+    return 'Delete $name and all their utang records?';
+  }
+
+  @override
+  String customerDeleted(String name) {
+    return '$name deleted';
+  }
+
+  @override
+  String get noEntriesYet => 'No utang or bayad yet';
+
+  @override
+  String customerCount(int count) {
+    return '$count customers';
+  }
 }

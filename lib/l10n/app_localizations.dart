@@ -343,6 +343,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cebuano'**
   String get cebuano;
+
+  /// Subtitle for the Mga Utang home card
+  ///
+  /// In en, this message translates to:
+  /// **'Track customer debts'**
+  String get mgaUtangSubtitle;
+
+  /// Customer list section title
+  ///
+  /// In en, this message translates to:
+  /// **'Customers'**
+  String get customers;
+
+  /// Empty state title for customer list
+  ///
+  /// In en, this message translates to:
+  /// **'No customers yet'**
+  String get noCustomersYet;
+
+  /// Empty state subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Add a customer to start tracking utang'**
+  String get addFirstCustomer;
+
+  /// Customer search hint
+  ///
+  /// In en, this message translates to:
+  /// **'Search customers'**
+  String get searchCustomers;
+
+  /// No search results
+  ///
+  /// In en, this message translates to:
+  /// **'No matching customers'**
+  String get noMatchingCustomers;
+
+  /// Label for total owed
+  ///
+  /// In en, this message translates to:
+  /// **'Total Outstanding'**
+  String get totalOutstanding;
+
+  /// Active customers filter
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// Archived customers filter
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get archived;
+
+  /// Add customer title
+  ///
+  /// In en, this message translates to:
+  /// **'Add Customer'**
+  String get addCustomer;
+
+  /// Edit customer title
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Customer'**
+  String get editCustomer;
+
+  /// Customer name field label
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get customerName;
+
+  /// Name validation error
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a name'**
+  String get pleaseEnterCustomerName;
+
+  /// Phone field label
+  ///
+  /// In en, this message translates to:
+  /// **'Phone (optional)'**
+  String get phoneOptional;
+
+  /// Save customer button
+  ///
+  /// In en, this message translates to:
+  /// **'Save Customer'**
+  String get saveCustomer;
+
+  /// Add debt button
+  ///
+  /// In en, this message translates to:
+  /// **'Add Utang'**
+  String get addUtang;
+
+  /// Add payment button
+  ///
+  /// In en, this message translates to:
+  /// **'Add Bayad'**
+  String get addBayad;
+
+  /// Balance label
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get balance;
+
+  /// Zero balance label
+  ///
+  /// In en, this message translates to:
+  /// **'Settled'**
+  String get settled;
+
+  /// Amount field label
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// Amount required error
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter an amount'**
+  String get pleaseEnterAmount;
+
+  /// Amount positivity error
+  ///
+  /// In en, this message translates to:
+  /// **'Enter an amount greater than zero'**
+  String get pleaseEnterValidAmount;
+
+  /// Note field label
+  ///
+  /// In en, this message translates to:
+  /// **'Note (optional)'**
+  String get noteOptional;
+
+  /// Generic save button
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// Archive action
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get archive;
+
+  /// Unarchive action
+  ///
+  /// In en, this message translates to:
+  /// **'Unarchive'**
+  String get unarchive;
+
+  /// Delete customer action
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Customer'**
+  String get deleteCustomer;
+
+  /// Delete confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {name} and all their utang records?'**
+  String confirmDeleteCustomer(String name);
+
+  /// Delete snackbar
+  ///
+  /// In en, this message translates to:
+  /// **'{name} deleted'**
+  String customerDeleted(String name);
+
+  /// Empty ledger state
+  ///
+  /// In en, this message translates to:
+  /// **'No utang or bayad yet'**
+  String get noEntriesYet;
+
+  /// Customer count label
+  ///
+  /// In en, this message translates to:
+  /// **'{count} customers'**
+  String customerCount(int count);
 }
 
 class _AppLocalizationsDelegate
