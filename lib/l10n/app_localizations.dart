@@ -553,6 +553,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No utang or bayad yet'**
   String get noEntriesYet;
+
+  /// Soft, non-blocking suggestion shown when a new customer name matches an existing one
+  ///
+  /// In en, this message translates to:
+  /// **'You already have a customer named \"{name}\". Consider a different nickname, or add a clue to tell them apart (e.g. \"Kuya Jun\", \"Jun tindera\").'**
+  String duplicateNameHint(String name);
 }
 
 class _AppLocalizationsDelegate

@@ -76,5 +76,6 @@
   "confirmDeleteCustomer": "Papason si {name} ug tanan niyang utang?",
   "customerDeleted": "Gipapas si {name}",
   "outstandingBalanceWarning": "Nabiling utang: {amount}",
-  "noEntriesYet": "Wala pay utang o bayad"
+  "noEntriesYet": "Wala pay utang o bayad",
+  "duplicateNameHint": "Naa na kay kustomer nga ginganlag \"{name}\". Pwede kag laing angga, o pagdugang ilhanan aron dili sila magkalibog (pananglitan \"Kuya Jun\", \"Jun tindera\")."
 }

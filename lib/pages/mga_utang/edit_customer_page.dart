@@ -18,6 +18,11 @@ class _EditCustomerPageState extends State<EditCustomerPage> {
   late final TextEditingController _phoneController;
   bool _saving = false;
 
+  /// Names of existing active customers, lowercased and trimmed, used to
+  /// softly warn about duplicates. Excludes this customer when editing.
+  Set<String> _existingNames = {};
+  bool _duplicateName = false;
+
   bool get _isEditing => widget.customer != null;
 
   @override
@@ -26,6 +31,22 @@ class _EditCustomerPageState extends State<EditCustomerPage> {
     _nameController = TextEditingController(text: widget.customer?.name ?? '');
     _phoneController =
         TextEditingController(text: widget.customer?.phone ?? '');
+    _loadExistingNames();
+  }
+
+  Future<void> _loadExistingNames() async {
+    final names = await activeCustomerNames(excludeId: widget.customer?.id);
+    if (!mounted) return;
+    setState(() {
+      _existingNames = names.map((n) => n.trim().toLowerCase()).toSet();
+    });
+  }
+
+  void _onNameChanged(String value) {
+    final duplicate = _existingNames.contains(value.trim().toLowerCase());
+    if (duplicate != _duplicateName) {
+      setState(() => _duplicateName = duplicate);
+    }
   }
 
   @override
@@ -81,6 +102,7 @@ class _EditCustomerPageState extends State<EditCustomerPage> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
+                  onChanged: _onNameChanged,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return l10n.pleaseEnterCustomerName;
@@ -88,6 +110,10 @@ class _EditCustomerPageState extends State<EditCustomerPage> {
                     return null;
                   },
                 ),
+                if (_duplicateName) ...[
+                  const SizedBox(height: 8),
+                  _DuplicateNameHint(name: _nameController.text.trim()),
+                ],
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _phoneController,
@@ -120,6 +146,45 @@ class _EditCustomerPageState extends State<EditCustomerPage> {
                         strokeWidth: 2, color: Colors.white),
                   )
                 : Text(l10n.saveCustomer),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Non-blocking hint shown when the entered name matches an existing customer.
+/// Suggests a distinguishing nickname; it never prevents saving.
+class _DuplicateNameHint extends StatelessWidget {
+  const _DuplicateNameHint({required this.name});
+
+  final String name;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: colorScheme.tertiaryContainer,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.info_outline,
+              size: 20, color: colorScheme.onTertiaryContainer),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              l10n.duplicateNameHint(name),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: colorScheme.onTertiaryContainer,
+              ),
+            ),
           ),
         ],
       ),

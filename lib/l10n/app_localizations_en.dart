@@ -265,4 +265,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noEntriesYet => 'No utang or bayad yet';
+
+  @override
+  String duplicateNameHint(String name) {
+    return 'You already have a customer named \"$name\". Consider a different nickname, or add a clue to tell them apart (e.g. \"Kuya Jun\", \"Jun tindera\").';
+  }
 }

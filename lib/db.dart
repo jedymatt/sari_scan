@@ -91,6 +91,20 @@ Future<List<models.CustomerWithBalance>> queryCustomers(
   }).toList();
 }
 
+/// Returns the names of all active (non-trashed) customers, optionally
+/// excluding the customer with [excludeId] (useful when editing so a
+/// customer doesn't match against itself).
+Future<List<String>> activeCustomerNames({int? excludeId}) async {
+  final db = _getDatabase();
+
+  final rows =
+      await (db.select(db.customers)..where((c) => c.deletedAt.isNull())).get();
+  return rows
+      .where((r) => r.id != excludeId)
+      .map((r) => r.name)
+      .toList();
+}
+
 Future<int> insertCustomer(models.Customer customer) {
   final db = _getDatabase();
   return db.into(db.customers).insert(CustomersCompanion.insert(

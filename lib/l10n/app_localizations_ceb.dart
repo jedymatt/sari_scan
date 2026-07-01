@@ -268,4 +268,9 @@ class AppLocalizationsCeb extends AppLocalizations {
 
   @override
   String get noEntriesYet => 'Wala pay utang o bayad';
+
+  @override
+  String duplicateNameHint(String name) {
+    return 'Naa na kay kustomer nga ginganlag \"$name\". Pwede kag laing angga, o pagdugang ilhanan aron dili sila magkalibog (pananglitan \"Kuya Jun\", \"Jun tindera\").';
+  }
 }

@@ -418,5 +418,15 @@
   "noEntriesYet": "No utang or bayad yet",
   "@noEntriesYet": {
     "description": "Empty ledger state"
+  },
+
+  "duplicateNameHint": "You already have a customer named \"{name}\". Consider a different nickname, or add a clue to tell them apart (e.g. \"Kuya Jun\", \"Jun tindera\").",
+  "@duplicateNameHint": {
+    "description": "Soft, non-blocking suggestion shown when a new customer name matches an existing one",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   }
 }
