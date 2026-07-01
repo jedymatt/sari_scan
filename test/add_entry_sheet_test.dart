@@ -18,9 +18,17 @@ void main() {
     expect(find.text('Please enter an amount'), findsOneWidget);
   });
 
-  testWidgets('rejects zero and negative amounts', (tester) async {
+  testWidgets('rejects a zero amount', (tester) async {
     await tester.pumpWidget(_wrap(const AddEntryForm(type: UtangType.debt)));
     await tester.enterText(find.byType(TextFormField).first, '0');
+    await tester.tap(find.byType(FilledButton));
+    await tester.pump();
+    expect(find.text('Enter an amount greater than zero'), findsOneWidget);
+  });
+
+  testWidgets('rejects a negative amount', (tester) async {
+    await tester.pumpWidget(_wrap(const AddEntryForm(type: UtangType.debt)));
+    await tester.enterText(find.byType(TextFormField).first, '-5');
     await tester.tap(find.byType(FilledButton));
     await tester.pump();
     expect(find.text('Enter an amount greater than zero'), findsOneWidget);

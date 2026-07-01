@@ -150,9 +150,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mgaUtangSubtitle => 'Track customer debts';
 
   @override
-  String get customers => 'Customers';
-
-  @override
   String get noCustomersYet => 'No customers yet';
 
   @override
@@ -238,10 +235,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get noEntriesYet => 'No utang or bayad yet';
+  String outstandingBalanceWarning(String amount) {
+    return 'Outstanding balance: $amount';
+  }
 
   @override
-  String customerCount(int count) {
-    return '$count customers';
-  }
+  String get noEntriesYet => 'No utang or bayad yet';
 }

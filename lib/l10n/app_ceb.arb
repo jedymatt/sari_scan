@@ -43,7 +43,6 @@
   "cebuano": "Binisaya",
 
   "mgaUtangSubtitle": "Subaya ang utang sa mga suki",
-  "customers": "Mga Suki",
   "noCustomersYet": "Wala pay suki",
   "addFirstCustomer": "Pagdugang ug suki aron masugdan ang pagsubay sa utang",
   "searchCustomers": "Pangitaa ang suki",
@@ -71,6 +70,6 @@
   "deleteCustomer": "Papasa ang Suki",
   "confirmDeleteCustomer": "Papason si {name} ug tanan niyang utang?",
   "customerDeleted": "Gipapas si {name}",
-  "noEntriesYet": "Wala pay utang o bayad",
-  "customerCount": "{count} ka suki"
+  "outstandingBalanceWarning": "Nabiling utang: {amount}",
+  "noEntriesYet": "Wala pay utang o bayad"
 }

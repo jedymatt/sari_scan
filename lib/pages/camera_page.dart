@@ -207,8 +207,7 @@ class _CameraPageState extends State<CameraPage> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          RegisterProductPage(
+                                      builder: (context) => RegisterProductPage(
                                         barcode: code,
                                         format: barcode!.format,
                                       ),

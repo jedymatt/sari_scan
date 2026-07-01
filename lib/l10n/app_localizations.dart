@@ -350,12 +350,6 @@ abstract class AppLocalizations {
   /// **'Track customer debts'**
   String get mgaUtangSubtitle;
 
-  /// Customer list section title
-  ///
-  /// In en, this message translates to:
-  /// **'Customers'**
-  String get customers;
-
   /// Empty state title for customer list
   ///
   /// In en, this message translates to:
@@ -518,17 +512,17 @@ abstract class AppLocalizations {
   /// **'{name} deleted'**
   String customerDeleted(String name);
 
+  /// Warning shown in delete dialog when customer still has an outstanding balance
+  ///
+  /// In en, this message translates to:
+  /// **'Outstanding balance: {amount}'**
+  String outstandingBalanceWarning(String amount);
+
   /// Empty ledger state
   ///
   /// In en, this message translates to:
   /// **'No utang or bayad yet'**
   String get noEntriesYet;
-
-  /// Customer count label
-  ///
-  /// In en, this message translates to:
-  /// **'{count} customers'**
-  String customerCount(int count);
 }
 
 class _AppLocalizationsDelegate

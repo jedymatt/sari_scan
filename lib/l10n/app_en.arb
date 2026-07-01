@@ -230,11 +230,6 @@
     "description": "Subtitle for the Mga Utang home card"
   },
 
-  "customers": "Customers",
-  "@customers": {
-    "description": "Customer list section title"
-  },
-
   "noCustomersYet": "No customers yet",
   "@noCustomersYet": {
     "description": "Empty state title for customer list"
@@ -380,18 +375,18 @@
     }
   },
 
+  "outstandingBalanceWarning": "Outstanding balance: {amount}",
+  "@outstandingBalanceWarning": {
+    "description": "Warning shown in delete dialog when customer still has an outstanding balance",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+
   "noEntriesYet": "No utang or bayad yet",
   "@noEntriesYet": {
     "description": "Empty ledger state"
-  },
-
-  "customerCount": "{count} customers",
-  "@customerCount": {
-    "description": "Customer count label",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
   }
 }

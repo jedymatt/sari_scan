@@ -238,9 +238,7 @@ class _ProductCard extends StatelessWidget {
             CircleAvatar(
               backgroundColor: colorScheme.primaryContainer,
               child: Text(
-                product.name.isNotEmpty
-                    ? product.name[0].toUpperCase()
-                    : '?',
+                product.name.isNotEmpty ? product.name[0].toUpperCase() : '?',
                 style: TextStyle(
                   color: colorScheme.onPrimaryContainer,
                   fontWeight: FontWeight.bold,

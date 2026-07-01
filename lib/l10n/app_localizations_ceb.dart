@@ -151,9 +151,6 @@ class AppLocalizationsCeb extends AppLocalizations {
   String get mgaUtangSubtitle => 'Subaya ang utang sa mga suki';
 
   @override
-  String get customers => 'Mga Suki';
-
-  @override
   String get noCustomersYet => 'Wala pay suki';
 
   @override
@@ -241,10 +238,10 @@ class AppLocalizationsCeb extends AppLocalizations {
   }
 
   @override
-  String get noEntriesYet => 'Wala pay utang o bayad';
+  String outstandingBalanceWarning(String amount) {
+    return 'Nabiling utang: $amount';
+  }
 
   @override
-  String customerCount(int count) {
-    return '$count ka suki';
-  }
+  String get noEntriesYet => 'Wala pay utang o bayad';
 }

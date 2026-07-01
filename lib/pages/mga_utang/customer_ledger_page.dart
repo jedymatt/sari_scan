@@ -71,12 +71,23 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
 
   Future<void> _delete() async {
     final l10n = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
     final customer = _customer!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.deleteCustomer),
-        content: Text(l10n.confirmDeleteCustomer(customer.name)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l10n.confirmDeleteCustomer(customer.name)),
+            if (_balance > 0) ...[
+              const SizedBox(height: 8),
+              Text(l10n.outstandingBalanceWarning(phpFormat.format(_balance))),
+            ],
+          ],
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -95,6 +106,12 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
     if (confirmed != true) return;
     await deleteCustomer(customer.id!);
     if (!mounted) return;
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text(l10n.customerDeleted(customer.name)),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
     Navigator.of(context).pop();
   }
 
@@ -106,141 +123,142 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
     final customer = _customer;
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text(customer?.name ?? ''),
-          actions: [
-            if (customer != null)
-              PopupMenuButton<String>(
-                onSelected: (value) {
-                  switch (value) {
-                    case 'edit':
-                      _edit();
-                    case 'archive':
-                      _toggleArchive();
-                    case 'delete':
-                      _delete();
-                  }
-                },
-                itemBuilder: (context) => [
-                  PopupMenuItem(value: 'edit', child: Text(l10n.editCustomer)),
-                  PopupMenuItem(
-                    value: 'archive',
-                    child: Text(
-                        customer.isArchived ? l10n.unarchive : l10n.archive),
-                  ),
-                  PopupMenuItem(value: 'delete', child: Text(l10n.deleteCustomer)),
-                ],
-              ),
-          ],
-        ),
-        body: customer == null || _entries == null
-            ? const Center(child: CircularProgressIndicator())
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          children: [
-                            Text(l10n.balance,
-                                style: theme.textTheme.labelMedium?.copyWith(
-                                  color: colorScheme.onSurfaceVariant,
-                                )),
-                            const SizedBox(height: 4),
-                            Text(
-                              _balance <= 0
-                                  ? l10n.settled
-                                  : phpFormat.format(_balance),
-                              style: theme.textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: _balance > 0
-                                    ? colorScheme.error
-                                    : colorScheme.onSurfaceVariant,
-                              ),
+      appBar: AppBar(
+        title: Text(customer?.name ?? ''),
+        actions: [
+          if (customer != null)
+            PopupMenuButton<String>(
+              onSelected: (value) {
+                switch (value) {
+                  case 'edit':
+                    _edit();
+                  case 'archive':
+                    _toggleArchive();
+                  case 'delete':
+                    _delete();
+                }
+              },
+              itemBuilder: (context) => [
+                PopupMenuItem(value: 'edit', child: Text(l10n.editCustomer)),
+                PopupMenuItem(
+                  value: 'archive',
+                  child:
+                      Text(customer.isArchived ? l10n.unarchive : l10n.archive),
+                ),
+                PopupMenuItem(
+                    value: 'delete', child: Text(l10n.deleteCustomer)),
+              ],
+            ),
+        ],
+      ),
+      body: customer == null || _entries == null
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        children: [
+                          Text(l10n.balance,
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                              )),
+                          const SizedBox(height: 4),
+                          Text(
+                            _balance <= 0
+                                ? l10n.settled
+                                : phpFormat.format(_balance),
+                            style: theme.textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: _balance > 0
+                                  ? colorScheme.error
+                                  : colorScheme.onSurfaceVariant,
                             ),
-                            if (customer.phone != null) ...[
-                              const SizedBox(height: 8),
-                              Text(customer.phone!,
-                                  style: theme.textTheme.bodySmall),
-                            ],
+                          ),
+                          if (customer.phone != null) ...[
+                            const SizedBox(height: 8),
+                            Text(customer.phone!,
+                                style: theme.textTheme.bodySmall),
                           ],
-                        ),
+                        ],
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: () => _addEntry(UtangType.debt),
-                            icon: const Icon(Icons.add),
-                            label: Text(l10n.addUtang),
-                          ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => _addEntry(UtangType.debt),
+                          icon: const Icon(Icons.add),
+                          label: Text(l10n.addUtang),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: FilledButton.icon(
-                            onPressed: () => _addEntry(UtangType.payment),
-                            icon: const Icon(Icons.payments_outlined),
-                            label: Text(l10n.addBayad),
-                          ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: FilledButton.icon(
+                          onPressed: () => _addEntry(UtangType.payment),
+                          icon: const Icon(Icons.payments_outlined),
+                          label: Text(l10n.addBayad),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 8),
-                  Expanded(
-                    child: _entries!.isEmpty
-                        ? Center(
-                            child: Text(l10n.noEntriesYet,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: colorScheme.onSurfaceVariant,
-                                )))
-                        : ListView.builder(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            itemCount: _entries!.length,
-                            itemBuilder: (context, index) {
-                              final entry = _entries![index];
-                              final isDebt = entry.type == UtangType.debt;
-                              return ListTile(
-                                leading: CircleAvatar(
-                                  backgroundColor: isDebt
-                                      ? colorScheme.errorContainer
-                                      : colorScheme.primaryContainer,
-                                  child: Icon(
-                                    isDebt
-                                        ? Icons.arrow_upward
-                                        : Icons.arrow_downward,
-                                    color: isDebt
-                                        ? colorScheme.onErrorContainer
-                                        : colorScheme.onPrimaryContainer,
-                                  ),
+                ),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: _entries!.isEmpty
+                      ? Center(
+                          child: Text(l10n.noEntriesYet,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                              )))
+                      : ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          itemCount: _entries!.length,
+                          itemBuilder: (context, index) {
+                            final entry = _entries![index];
+                            final isDebt = entry.type == UtangType.debt;
+                            return ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: isDebt
+                                    ? colorScheme.errorContainer
+                                    : colorScheme.primaryContainer,
+                                child: Icon(
+                                  isDebt
+                                      ? Icons.arrow_upward
+                                      : Icons.arrow_downward,
+                                  color: isDebt
+                                      ? colorScheme.onErrorContainer
+                                      : colorScheme.onPrimaryContainer,
                                 ),
-                                title: Text(
-                                  '${isDebt ? '+' : '-'} '
-                                  '${phpFormat.format(entry.amount)}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color: isDebt
-                                        ? colorScheme.error
-                                        : colorScheme.primary,
-                                  ),
+                              ),
+                              title: Text(
+                                '${isDebt ? '+' : '-'} '
+                                '${phpFormat.format(entry.amount)}',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: isDebt
+                                      ? colorScheme.error
+                                      : colorScheme.primary,
                                 ),
-                                subtitle:
-                                    entry.note != null ? Text(entry.note!) : null,
-                              );
-                            },
-                          ),
-                  ),
-                ],
-              ),
+                              ),
+                              subtitle:
+                                  entry.note != null ? Text(entry.note!) : null,
+                            );
+                          },
+                        ),
+                ),
+              ],
+            ),
     );
   }
 }

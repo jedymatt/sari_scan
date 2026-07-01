@@ -24,22 +24,24 @@ Future<List<models.Product>> queryProducts() async {
   final db = _getDatabase();
   final results = await db.select(db.products).get();
 
-  return results.map((row) => models.Product(
-    id: row.id,
-    name: row.name,
-    price: row.price,
-    barcode: row.barcode,
-  )).toList();
+  return results
+      .map((row) => models.Product(
+            id: row.id,
+            name: row.name,
+            price: row.price,
+            barcode: row.barcode,
+          ))
+      .toList();
 }
 
 Future<void> insertProduct(models.Product product) async {
   final db = _getDatabase();
 
   await db.into(db.products).insert(ProductsCompanion.insert(
-    name: product.name,
-    price: product.price.toDouble(),
-    barcode: product.barcode,
-  ));
+        name: product.name,
+        price: product.price.toDouble(),
+        barcode: product.barcode,
+      ));
 }
 
 Future<void> updateProduct(models.Product product) async {
@@ -64,8 +66,7 @@ Future<List<models.CustomerWithBalance>> queryCustomers(
   final db = _getDatabase();
 
   final query = db.select(db.customers)
-    ..where((c) =>
-        archived ? c.archivedAt.isNotNull() : c.archivedAt.isNull())
+    ..where((c) => archived ? c.archivedAt.isNotNull() : c.archivedAt.isNull())
     ..orderBy([(c) => OrderingTerm.asc(c.name)]);
   final customerRows = await query.get();
   if (customerRows.isEmpty) return [];
@@ -128,7 +129,10 @@ Future<List<models.UtangEntry>> queryEntries(int customerId) async {
   final db = _getDatabase();
   final rows = await (db.select(db.utangEntries)
         ..where((e) => e.customerId.equals(customerId))
-        ..orderBy([(e) => OrderingTerm.desc(e.createdAt)]))
+        ..orderBy([
+          (e) => OrderingTerm.desc(e.createdAt),
+          (e) => OrderingTerm.desc(e.id),
+        ]))
       .get();
   return rows.map(_toEntry).toList();
 }

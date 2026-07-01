@@ -82,8 +82,7 @@ class _MgaUtangPageState extends State<MgaUtangPage> {
                     prefixIcon: const Icon(Icons.search),
                     filled: true,
                     fillColor: colorScheme.surfaceContainerHighest,
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 16),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -190,8 +189,7 @@ class _MgaUtangPageState extends State<MgaUtangPage> {
                                             : colorScheme.onSurfaceVariant,
                                       ),
                                     ),
-                                    onTap: () =>
-                                        _openLedger(item.customer.id!),
+                                    onTap: () => _openLedger(item.customer.id!),
                                   ),
                                 );
                               },
