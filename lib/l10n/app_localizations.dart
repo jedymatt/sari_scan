@@ -530,12 +530,6 @@ abstract class AppLocalizations {
   /// **'Trash is empty'**
   String get noTrashedCustomers;
 
-  /// Delete customer action
-  ///
-  /// In en, this message translates to:
-  /// **'Delete Customer'**
-  String get deleteCustomer;
-
   /// Delete confirmation
   ///
   /// In en, this message translates to:

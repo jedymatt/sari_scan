@@ -385,11 +385,6 @@
     "description": "Empty state for the trash tab"
   },
 
-  "deleteCustomer": "Delete Customer",
-  "@deleteCustomer": {
-    "description": "Delete customer action"
-  },
-
   "confirmDeleteCustomer": "Delete {name} and all their utang records?",
   "@confirmDeleteCustomer": {
     "description": "Delete confirmation",

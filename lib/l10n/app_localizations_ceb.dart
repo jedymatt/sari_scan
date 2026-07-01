@@ -252,9 +252,6 @@ class AppLocalizationsCeb extends AppLocalizations {
   String get noTrashedCustomers => 'Walay sulod ang basura';
 
   @override
-  String get deleteCustomer => 'Papasa ang Suki';
-
-  @override
   String confirmDeleteCustomer(String name) {
     return 'Papason si $name ug tanan niyang utang?';
   }

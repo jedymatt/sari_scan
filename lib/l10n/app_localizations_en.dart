@@ -249,9 +249,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noTrashedCustomers => 'Trash is empty';
 
   @override
-  String get deleteCustomer => 'Delete Customer';
-
-  @override
   String confirmDeleteCustomer(String name) {
     return 'Delete $name and all their utang records?';
   }

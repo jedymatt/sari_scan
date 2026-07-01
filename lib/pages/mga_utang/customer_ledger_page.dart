@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sari_scan/l10n/app_localizations.dart';
 import 'package:sari_scan/core/currency.dart';
 import 'package:sari_scan/core/date_format.dart';
+import 'package:sari_scan/core/trash.dart';
 import 'package:sari_scan/db.dart';
 import 'package:sari_scan/models.dart';
 import 'package:sari_scan/pages/mga_utang/add_entry_sheet.dart';
@@ -27,10 +28,10 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
   }
 
   Future<void> _load() async {
-    // A customer is in exactly one of the active/archived lists.
+    // A customer is in exactly one of the active/trash lists.
     final active = await queryCustomers();
-    final archived = await queryCustomers(trashed: true);
-    final match = [...active, ...archived]
+    final trashed = await queryCustomers(trashed: true);
+    final match = [...active, ...trashed]
         .where((c) => c.customer.id == widget.customerId)
         .toList();
     final entries = await queryEntries(widget.customerId);
@@ -55,10 +56,38 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
     await _load();
   }
 
-  Future<void> _toggleArchive() async {
+  Future<void> _moveToTrash() async {
+    final l10n = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
     final customer = _customer!;
-    await setCustomerTrashed(customer.id!, !customer.isTrashed);
-    await _load();
+    await setCustomerTrashed(customer.id!, true);
+    if (!mounted) return;
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text(l10n.movedToTrash),
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: l10n.undo,
+          onPressed: () => setCustomerTrashed(customer.id!, false),
+        ),
+      ),
+    );
+    Navigator.of(context).pop();
+  }
+
+  Future<void> _restore() async {
+    final l10n = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    final customer = _customer!;
+    await setCustomerTrashed(customer.id!, false);
+    if (!mounted) return;
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text(l10n.restored),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+    Navigator.of(context).pop();
   }
 
   Future<void> _edit() async {
@@ -70,14 +99,14 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
     if (result == true) await _load();
   }
 
-  Future<void> _delete() async {
+  Future<void> _deletePermanently() async {
     final l10n = AppLocalizations.of(context)!;
     final messenger = ScaffoldMessenger.of(context);
     final customer = _customer!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(l10n.deleteCustomer),
+        title: Text(l10n.deletePermanently),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,22 +162,27 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
                 switch (value) {
                   case 'edit':
                     _edit();
-                  case 'archive':
-                    _toggleArchive();
+                  case 'trash':
+                    _moveToTrash();
+                  case 'restore':
+                    _restore();
                   case 'delete':
-                    _delete();
+                    _deletePermanently();
                 }
               },
-              itemBuilder: (context) => [
-                PopupMenuItem(value: 'edit', child: Text(l10n.editCustomer)),
-                PopupMenuItem(
-                  value: 'archive',
-                  child: Text(
-                      customer.isTrashed ? l10n.restore : l10n.moveToTrash),
-                ),
-                PopupMenuItem(
-                    value: 'delete', child: Text(l10n.deleteCustomer)),
-              ],
+              itemBuilder: (context) => customer.isTrashed
+                  ? [
+                      PopupMenuItem(
+                          value: 'restore', child: Text(l10n.restore)),
+                      PopupMenuItem(
+                          value: 'delete', child: Text(l10n.deletePermanently)),
+                    ]
+                  : [
+                      PopupMenuItem(
+                          value: 'edit', child: Text(l10n.editCustomer)),
+                      PopupMenuItem(
+                          value: 'trash', child: Text(l10n.moveToTrash)),
+                    ],
             ),
         ],
       ),
@@ -192,28 +226,54 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: () => _addEntry(UtangType.debt),
-                          icon: const Icon(Icons.add),
-                          label: Text(l10n.addUtang),
-                        ),
+                if (customer.isTrashed)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: colorScheme.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: FilledButton.icon(
-                          onPressed: () => _addEntry(UtangType.payment),
-                          icon: const Icon(Icons.payments_outlined),
-                          label: Text(l10n.addBayad),
-                        ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete_outline,
+                              color: colorScheme.onSurfaceVariant),
+                          const SizedBox(width: 8),
+                          Text(
+                            l10n.deletesInDays(daysUntilPurge(
+                                customer.deletedAt!, DateTime.now())),
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
+                  )
+                else
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: () => _addEntry(UtangType.debt),
+                            icon: const Icon(Icons.add),
+                            label: Text(l10n.addUtang),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: FilledButton.icon(
+                            onPressed: () => _addEntry(UtangType.payment),
+                            icon: const Icon(Icons.payments_outlined),
+                            label: Text(l10n.addBayad),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
                 const SizedBox(height: 8),
                 Expanded(
                   child: _entries!.isEmpty

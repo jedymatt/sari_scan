@@ -73,7 +73,6 @@
   "restored": "Gibalik",
   "deletesInDays": "{count, plural, =0{Mapapas karon} =1{Mapapas sa 1 ka adlaw} other{Mapapas sa {count} ka adlaw}}",
   "noTrashedCustomers": "Walay sulod ang basura",
-  "deleteCustomer": "Papasa ang Suki",
   "confirmDeleteCustomer": "Papason si {name} ug tanan niyang utang?",
   "customerDeleted": "Gipapas si {name}",
   "outstandingBalanceWarning": "Nabiling utang: {amount}",
