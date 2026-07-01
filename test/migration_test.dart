@@ -1,6 +1,7 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sari_scan/database.dart';
+import 'package:sari_scan/models.dart';
 import 'package:sqlite3/sqlite3.dart';
 
 void main() {
@@ -35,5 +36,19 @@ void main() {
         );
     final customers = await db.select(db.customers).get();
     expect(customers.single.id, customerId);
+
+    // utang_entries table migration is exercised: insert and read back.
+    await db.into(db.utangEntries).insert(
+          UtangEntriesCompanion.insert(
+            customerId: customerId,
+            type: UtangType.debt,
+            amount: 10.0,
+          ),
+        );
+    final utangEntries = await db.select(db.utangEntries).get();
+    expect(utangEntries, hasLength(1));
+    expect(utangEntries.single.customerId, customerId);
+    expect(utangEntries.single.type, UtangType.debt);
+    expect(utangEntries.single.amount, 10.0);
   });
 }
