@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sari_scan/l10n/app_localizations.dart';
 import 'package:sari_scan/core/currency.dart';
+import 'package:sari_scan/core/trash.dart';
 import 'package:sari_scan/db.dart';
 import 'package:sari_scan/models.dart';
 import 'package:sari_scan/pages/mga_utang/customer_ledger_page.dart';
@@ -26,6 +27,9 @@ class _MgaUtangPageState extends State<MgaUtangPage> {
   }
 
   Future<void> _load() async {
+    if (_showTrash) {
+      await purgeExpiredTrash();
+    }
     final customers = await queryCustomers(trashed: _showTrash);
     final total = await totalOutstanding();
     if (!mounted) return;
@@ -145,7 +149,7 @@ class _MgaUtangPageState extends State<MgaUtangPage> {
                 ),
                 Expanded(
                   child: _customers!.isEmpty
-                      ? _EmptyState(archived: _showTrash)
+                      ? _EmptyState(trashed: _showTrash)
                       : filtered.isEmpty
                           ? Center(
                               child: Text(l10n.noMatchingCustomers,
@@ -178,17 +182,30 @@ class _MgaUtangPageState extends State<MgaUtangPage> {
                                     subtitle: item.customer.phone != null
                                         ? Text(item.customer.phone!)
                                         : null,
-                                    trailing: Text(
-                                      owing
-                                          ? phpFormat.format(item.balance)
-                                          : l10n.settled,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: owing
-                                            ? colorScheme.error
-                                            : colorScheme.onSurfaceVariant,
-                                      ),
-                                    ),
+                                    trailing: _showTrash
+                                        ? Text(
+                                            l10n.deletesInDays(daysUntilPurge(
+                                              item.customer.deletedAt!,
+                                              DateTime.now(),
+                                            )),
+                                            style: theme.textTheme.bodySmall
+                                                ?.copyWith(
+                                              color:
+                                                  colorScheme.onSurfaceVariant,
+                                            ),
+                                          )
+                                        : Text(
+                                            owing
+                                                ? phpFormat.format(item.balance)
+                                                : l10n.settled,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: owing
+                                                  ? colorScheme.error
+                                                  : colorScheme
+                                                      .onSurfaceVariant,
+                                            ),
+                                          ),
                                     onTap: () => _openLedger(item.customer.id!),
                                   ),
                                 );
@@ -202,9 +219,9 @@ class _MgaUtangPageState extends State<MgaUtangPage> {
 }
 
 class _EmptyState extends StatelessWidget {
-  const _EmptyState({required this.archived});
+  const _EmptyState({required this.trashed});
 
-  final bool archived;
+  final bool trashed;
 
   @override
   Widget build(BuildContext context) {
@@ -216,16 +233,16 @@ class _EmptyState extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.people_outline,
+          Icon(trashed ? Icons.delete_outline : Icons.people_outline,
               size: 64, color: colorScheme.onSurfaceVariant),
           const SizedBox(height: 16),
           Text(
-            archived ? l10n.noMatchingCustomers : l10n.noCustomersYet,
+            trashed ? l10n.noTrashedCustomers : l10n.noCustomersYet,
             style: theme.textTheme.titleMedium?.copyWith(
               color: colorScheme.onSurfaceVariant,
             ),
           ),
-          if (!archived) ...[
+          if (!trashed) ...[
             const SizedBox(height: 4),
             Text(l10n.addFirstCustomer,
                 style: theme.textTheme.bodySmall?.copyWith(
