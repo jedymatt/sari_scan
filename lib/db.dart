@@ -10,6 +10,16 @@ AppDatabase _getDatabase() {
   return _database!;
 }
 
+/// Overrides the database instance for tests.
+void setDatabaseForTesting(AppDatabase db) {
+  _database = db;
+}
+
+/// Clears the test database override.
+void resetDatabaseForTesting() {
+  _database = null;
+}
+
 Future<List<models.Product>> queryProducts() async {
   final db = _getDatabase();
   final results = await db.select(db.products).get();
@@ -48,3 +58,124 @@ Future<void> deleteProduct(int id) async {
 
   await (db.delete(db.products)..where((p) => p.id.equals(id))).go();
 }
+
+Future<List<models.CustomerWithBalance>> queryCustomers(
+    {bool archived = false}) async {
+  final db = _getDatabase();
+
+  final query = db.select(db.customers)
+    ..where((c) =>
+        archived ? c.archivedAt.isNotNull() : c.archivedAt.isNull())
+    ..orderBy([(c) => OrderingTerm.asc(c.name)]);
+  final customerRows = await query.get();
+  if (customerRows.isEmpty) return [];
+
+  final ids = customerRows.map((c) => c.id).toList();
+  final entryRows = await (db.select(db.utangEntries)
+        ..where((e) => e.customerId.isIn(ids)))
+      .get();
+
+  final entriesByCustomer = <int, List<models.UtangEntry>>{};
+  for (final row in entryRows) {
+    entriesByCustomer.putIfAbsent(row.customerId, () => []).add(_toEntry(row));
+  }
+
+  return customerRows.map((row) {
+    final entries = entriesByCustomer[row.id] ?? const [];
+    return models.CustomerWithBalance(
+      customer: _toCustomer(row),
+      balance: models.balanceOf(entries),
+    );
+  }).toList();
+}
+
+Future<int> insertCustomer(models.Customer customer) {
+  final db = _getDatabase();
+  return db.into(db.customers).insert(CustomersCompanion.insert(
+        name: customer.name,
+        phone: Value(customer.phone),
+      ));
+}
+
+Future<void> updateCustomer(models.Customer customer) async {
+  final db = _getDatabase();
+  await (db.update(db.customers)..where((c) => c.id.equals(customer.id!)))
+      .write(CustomersCompanion(
+    name: Value(customer.name),
+    phone: Value(customer.phone),
+  ));
+}
+
+Future<void> deleteCustomer(int id) async {
+  final db = _getDatabase();
+  await db.transaction(() async {
+    await (db.delete(db.utangEntries)..where((e) => e.customerId.equals(id)))
+        .go();
+    await (db.delete(db.customers)..where((c) => c.id.equals(id))).go();
+  });
+}
+
+Future<void> setCustomerArchived(int id, bool archived) async {
+  final db = _getDatabase();
+  await (db.update(db.customers)..where((c) => c.id.equals(id))).write(
+    CustomersCompanion(
+      archivedAt: Value(archived ? DateTime.now() : null),
+    ),
+  );
+}
+
+Future<List<models.UtangEntry>> queryEntries(int customerId) async {
+  final db = _getDatabase();
+  final rows = await (db.select(db.utangEntries)
+        ..where((e) => e.customerId.equals(customerId))
+        ..orderBy([(e) => OrderingTerm.desc(e.createdAt)]))
+      .get();
+  return rows.map(_toEntry).toList();
+}
+
+Future<void> insertEntry({
+  required int customerId,
+  required models.UtangType type,
+  required double amount,
+  String? note,
+}) async {
+  final db = _getDatabase();
+  await db.transaction(() async {
+    await db.into(db.utangEntries).insert(UtangEntriesCompanion.insert(
+          customerId: customerId,
+          type: type,
+          amount: amount,
+          note: Value(note),
+        ));
+    if (type == models.UtangType.debt) {
+      await (db.update(db.customers)..where((c) => c.id.equals(customerId)))
+          .write(const CustomersCompanion(archivedAt: Value<DateTime?>(null)));
+    }
+  });
+}
+
+Future<double> totalOutstanding() async {
+  final withBalance = await queryCustomers();
+  var total = 0.0;
+  for (final c in withBalance) {
+    if (c.balance > 0) total += c.balance;
+  }
+  return total;
+}
+
+models.Customer _toCustomer(Customer row) => models.Customer(
+      id: row.id,
+      name: row.name,
+      phone: row.phone,
+      archivedAt: row.archivedAt,
+      createdAt: row.createdAt,
+    );
+
+models.UtangEntry _toEntry(UtangEntry row) => models.UtangEntry(
+      id: row.id,
+      customerId: row.customerId,
+      type: row.type,
+      amount: row.amount,
+      note: row.note,
+      createdAt: row.createdAt,
+    );
