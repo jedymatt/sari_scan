@@ -170,7 +170,7 @@ class AppLocalizationsCeb extends AppLocalizations {
   String get active => 'Aktibo';
 
   @override
-  String get archived => 'Naka-archive';
+  String get trash => 'Basura';
 
   @override
   String get addCustomer => 'Dugang Suki';
@@ -219,10 +219,37 @@ class AppLocalizationsCeb extends AppLocalizations {
   String get save => 'I-save';
 
   @override
-  String get archive => 'I-archive';
+  String get moveToTrash => 'Ibutang sa Basura';
 
   @override
-  String get unarchive => 'I-unarchive';
+  String get restore => 'Ibalik';
+
+  @override
+  String get deletePermanently => 'Papasa Permanente';
+
+  @override
+  String get movedToTrash => 'Gibutang sa basura';
+
+  @override
+  String get undo => 'Baw-ion';
+
+  @override
+  String get restored => 'Gibalik';
+
+  @override
+  String deletesInDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Mapapas sa $count ka adlaw',
+      one: 'Mapapas sa 1 ka adlaw',
+      zero: 'Mapapas karon',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noTrashedCustomers => 'Walay sulod ang basura';
 
   @override
   String get deleteCustomer => 'Papasa ang Suki';

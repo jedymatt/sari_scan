@@ -16,7 +16,7 @@ class MgaUtangPage extends StatefulWidget {
 class _MgaUtangPageState extends State<MgaUtangPage> {
   List<CustomerWithBalance>? _customers;
   double _total = 0;
-  bool _showArchived = false;
+  bool _showTrash = false;
   String _searchQuery = '';
 
   @override
@@ -26,7 +26,7 @@ class _MgaUtangPageState extends State<MgaUtangPage> {
   }
 
   Future<void> _load() async {
-    final customers = await queryCustomers(archived: _showArchived);
+    final customers = await queryCustomers(trashed: _showTrash);
     final total = await totalOutstanding();
     if (!mounted) return;
     setState(() {
@@ -96,11 +96,11 @@ class _MgaUtangPageState extends State<MgaUtangPage> {
                 child: SegmentedButton<bool>(
                   segments: [
                     ButtonSegment(value: false, label: Text(l10n.active)),
-                    ButtonSegment(value: true, label: Text(l10n.archived)),
+                    ButtonSegment(value: true, label: Text(l10n.trash)),
                   ],
-                  selected: {_showArchived},
+                  selected: {_showTrash},
                   onSelectionChanged: (selection) {
-                    setState(() => _showArchived = selection.first);
+                    setState(() => _showTrash = selection.first);
                     _load();
                   },
                 ),
@@ -145,7 +145,7 @@ class _MgaUtangPageState extends State<MgaUtangPage> {
                 ),
                 Expanded(
                   child: _customers!.isEmpty
-                      ? _EmptyState(archived: _showArchived)
+                      ? _EmptyState(archived: _showTrash)
                       : filtered.isEmpty
                           ? Center(
                               child: Text(l10n.noMatchingCustomers,

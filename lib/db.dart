@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:sari_scan/database.dart';
 import 'package:sari_scan/models.dart' as models;
+import 'package:sari_scan/core/trash.dart';
 
 // Singleton database instance
 AppDatabase? _database;
@@ -62,11 +63,11 @@ Future<void> deleteProduct(int id) async {
 }
 
 Future<List<models.CustomerWithBalance>> queryCustomers(
-    {bool archived = false}) async {
+    {bool trashed = false}) async {
   final db = _getDatabase();
 
   final query = db.select(db.customers)
-    ..where((c) => archived ? c.archivedAt.isNotNull() : c.archivedAt.isNull())
+    ..where((c) => trashed ? c.deletedAt.isNotNull() : c.deletedAt.isNull())
     ..orderBy([(c) => OrderingTerm.asc(c.name)]);
   final customerRows = await query.get();
   if (customerRows.isEmpty) return [];
@@ -116,11 +117,29 @@ Future<void> deleteCustomer(int id) async {
   });
 }
 
-Future<void> setCustomerArchived(int id, bool archived) async {
+/// Permanently deletes customers (and their entries) that have been in the
+/// trash longer than [retention]. Returns the number of customers purged.
+Future<int> purgeExpiredTrash({Duration retention = trashRetention}) async {
+  final db = _getDatabase();
+  final cutoff = DateTime.now().subtract(retention);
+  return db.transaction(() async {
+    final expired = await (db.select(db.customers)
+          ..where((c) => c.deletedAt.isSmallerThanValue(cutoff)))
+        .get();
+    if (expired.isEmpty) return 0;
+    final ids = expired.map((c) => c.id).toList();
+    await (db.delete(db.utangEntries)..where((e) => e.customerId.isIn(ids)))
+        .go();
+    await (db.delete(db.customers)..where((c) => c.id.isIn(ids))).go();
+    return ids.length;
+  });
+}
+
+Future<void> setCustomerTrashed(int id, bool trashed) async {
   final db = _getDatabase();
   await (db.update(db.customers)..where((c) => c.id.equals(id))).write(
     CustomersCompanion(
-      archivedAt: Value(archived ? DateTime.now() : null),
+      deletedAt: Value(trashed ? DateTime.now() : null),
     ),
   );
 }
@@ -144,18 +163,12 @@ Future<void> insertEntry({
   String? note,
 }) async {
   final db = _getDatabase();
-  await db.transaction(() async {
-    await db.into(db.utangEntries).insert(UtangEntriesCompanion.insert(
-          customerId: customerId,
-          type: type,
-          amount: amount,
-          note: Value(note),
-        ));
-    if (type == models.UtangType.debt) {
-      await (db.update(db.customers)..where((c) => c.id.equals(customerId)))
-          .write(const CustomersCompanion(archivedAt: Value<DateTime?>(null)));
-    }
-  });
+  await db.into(db.utangEntries).insert(UtangEntriesCompanion.insert(
+        customerId: customerId,
+        type: type,
+        amount: amount,
+        note: Value(note),
+      ));
 }
 
 Future<double> totalOutstanding() async {
@@ -171,7 +184,7 @@ models.Customer _toCustomer(Customer row) => models.Customer(
       id: row.id,
       name: row.name,
       phone: row.phone,
-      archivedAt: row.archivedAt,
+      deletedAt: row.deletedAt,
       createdAt: row.createdAt,
     );
 

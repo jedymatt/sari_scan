@@ -29,7 +29,7 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
   Future<void> _load() async {
     // A customer is in exactly one of the active/archived lists.
     final active = await queryCustomers();
-    final archived = await queryCustomers(archived: true);
+    final archived = await queryCustomers(trashed: true);
     final match = [...active, ...archived]
         .where((c) => c.customer.id == widget.customerId)
         .toList();
@@ -57,7 +57,7 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
 
   Future<void> _toggleArchive() async {
     final customer = _customer!;
-    await setCustomerArchived(customer.id!, !customer.isArchived);
+    await setCustomerTrashed(customer.id!, !customer.isTrashed);
     await _load();
   }
 
@@ -143,8 +143,8 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
                 PopupMenuItem(value: 'edit', child: Text(l10n.editCustomer)),
                 PopupMenuItem(
                   value: 'archive',
-                  child:
-                      Text(customer.isArchived ? l10n.unarchive : l10n.archive),
+                  child: Text(
+                      customer.isTrashed ? l10n.restore : l10n.moveToTrash),
                 ),
                 PopupMenuItem(
                     value: 'delete', child: Text(l10n.deleteCustomer)),

@@ -282,11 +282,11 @@ class $CustomersTable extends Customers
   late final GeneratedColumn<String> phone = GeneratedColumn<String>(
       'phone', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _archivedAtMeta =
-      const VerificationMeta('archivedAt');
+  static const VerificationMeta _deletedAtMeta =
+      const VerificationMeta('deletedAt');
   @override
-  late final GeneratedColumn<DateTime> archivedAt = GeneratedColumn<DateTime>(
-      'archived_at', aliasedName, true,
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+      'deleted_at', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
   static const VerificationMeta _createdAtMeta =
       const VerificationMeta('createdAt');
@@ -297,8 +297,7 @@ class $CustomersTable extends Customers
       requiredDuringInsert: false,
       defaultValue: currentDateAndTime);
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, name, phone, archivedAt, createdAt];
+  List<GeneratedColumn> get $columns => [id, name, phone, deletedAt, createdAt];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -322,11 +321,9 @@ class $CustomersTable extends Customers
       context.handle(
           _phoneMeta, phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta));
     }
-    if (data.containsKey('archived_at')) {
-      context.handle(
-          _archivedAtMeta,
-          archivedAt.isAcceptableOrUnknown(
-              data['archived_at']!, _archivedAtMeta));
+    if (data.containsKey('deleted_at')) {
+      context.handle(_deletedAtMeta,
+          deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta));
     }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
@@ -347,8 +344,8 @@ class $CustomersTable extends Customers
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
       phone: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}phone']),
-      archivedAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}archived_at']),
+      deletedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}deleted_at']),
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
     );
@@ -364,13 +361,13 @@ class Customer extends DataClass implements Insertable<Customer> {
   final int id;
   final String name;
   final String? phone;
-  final DateTime? archivedAt;
+  final DateTime? deletedAt;
   final DateTime createdAt;
   const Customer(
       {required this.id,
       required this.name,
       this.phone,
-      this.archivedAt,
+      this.deletedAt,
       required this.createdAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -380,8 +377,8 @@ class Customer extends DataClass implements Insertable<Customer> {
     if (!nullToAbsent || phone != null) {
       map['phone'] = Variable<String>(phone);
     }
-    if (!nullToAbsent || archivedAt != null) {
-      map['archived_at'] = Variable<DateTime>(archivedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
@@ -393,9 +390,9 @@ class Customer extends DataClass implements Insertable<Customer> {
       name: Value(name),
       phone:
           phone == null && nullToAbsent ? const Value.absent() : Value(phone),
-      archivedAt: archivedAt == null && nullToAbsent
+      deletedAt: deletedAt == null && nullToAbsent
           ? const Value.absent()
-          : Value(archivedAt),
+          : Value(deletedAt),
       createdAt: Value(createdAt),
     );
   }
@@ -407,7 +404,7 @@ class Customer extends DataClass implements Insertable<Customer> {
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       phone: serializer.fromJson<String?>(json['phone']),
-      archivedAt: serializer.fromJson<DateTime?>(json['archivedAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -418,7 +415,7 @@ class Customer extends DataClass implements Insertable<Customer> {
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
       'phone': serializer.toJson<String?>(phone),
-      'archivedAt': serializer.toJson<DateTime?>(archivedAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -427,13 +424,13 @@ class Customer extends DataClass implements Insertable<Customer> {
           {int? id,
           String? name,
           Value<String?> phone = const Value.absent(),
-          Value<DateTime?> archivedAt = const Value.absent(),
+          Value<DateTime?> deletedAt = const Value.absent(),
           DateTime? createdAt}) =>
       Customer(
         id: id ?? this.id,
         name: name ?? this.name,
         phone: phone.present ? phone.value : this.phone,
-        archivedAt: archivedAt.present ? archivedAt.value : this.archivedAt,
+        deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
         createdAt: createdAt ?? this.createdAt,
       );
   Customer copyWithCompanion(CustomersCompanion data) {
@@ -441,8 +438,7 @@ class Customer extends DataClass implements Insertable<Customer> {
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       phone: data.phone.present ? data.phone.value : this.phone,
-      archivedAt:
-          data.archivedAt.present ? data.archivedAt.value : this.archivedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -453,14 +449,14 @@ class Customer extends DataClass implements Insertable<Customer> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('phone: $phone, ')
-          ..write('archivedAt: $archivedAt, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, phone, archivedAt, createdAt);
+  int get hashCode => Object.hash(id, name, phone, deletedAt, createdAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -468,7 +464,7 @@ class Customer extends DataClass implements Insertable<Customer> {
           other.id == this.id &&
           other.name == this.name &&
           other.phone == this.phone &&
-          other.archivedAt == this.archivedAt &&
+          other.deletedAt == this.deletedAt &&
           other.createdAt == this.createdAt);
 }
 
@@ -476,34 +472,34 @@ class CustomersCompanion extends UpdateCompanion<Customer> {
   final Value<int> id;
   final Value<String> name;
   final Value<String?> phone;
-  final Value<DateTime?> archivedAt;
+  final Value<DateTime?> deletedAt;
   final Value<DateTime> createdAt;
   const CustomersCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.phone = const Value.absent(),
-    this.archivedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   CustomersCompanion.insert({
     this.id = const Value.absent(),
     required String name,
     this.phone = const Value.absent(),
-    this.archivedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
     this.createdAt = const Value.absent(),
   }) : name = Value(name);
   static Insertable<Customer> custom({
     Expression<int>? id,
     Expression<String>? name,
     Expression<String>? phone,
-    Expression<DateTime>? archivedAt,
+    Expression<DateTime>? deletedAt,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
       if (phone != null) 'phone': phone,
-      if (archivedAt != null) 'archived_at': archivedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
       if (createdAt != null) 'created_at': createdAt,
     });
   }
@@ -512,13 +508,13 @@ class CustomersCompanion extends UpdateCompanion<Customer> {
       {Value<int>? id,
       Value<String>? name,
       Value<String?>? phone,
-      Value<DateTime?>? archivedAt,
+      Value<DateTime?>? deletedAt,
       Value<DateTime>? createdAt}) {
     return CustomersCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       phone: phone ?? this.phone,
-      archivedAt: archivedAt ?? this.archivedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -535,8 +531,8 @@ class CustomersCompanion extends UpdateCompanion<Customer> {
     if (phone.present) {
       map['phone'] = Variable<String>(phone.value);
     }
-    if (archivedAt.present) {
-      map['archived_at'] = Variable<DateTime>(archivedAt.value);
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -550,7 +546,7 @@ class CustomersCompanion extends UpdateCompanion<Customer> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('phone: $phone, ')
-          ..write('archivedAt: $archivedAt, ')
+          ..write('deletedAt: $deletedAt, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -1061,14 +1057,14 @@ typedef $$CustomersTableCreateCompanionBuilder = CustomersCompanion Function({
   Value<int> id,
   required String name,
   Value<String?> phone,
-  Value<DateTime?> archivedAt,
+  Value<DateTime?> deletedAt,
   Value<DateTime> createdAt,
 });
 typedef $$CustomersTableUpdateCompanionBuilder = CustomersCompanion Function({
   Value<int> id,
   Value<String> name,
   Value<String?> phone,
-  Value<DateTime?> archivedAt,
+  Value<DateTime?> deletedAt,
   Value<DateTime> createdAt,
 });
 
@@ -1110,8 +1106,8 @@ class $$CustomersTableFilterComposer
   ColumnFilters<String> get phone => $composableBuilder(
       column: $table.phone, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<DateTime> get archivedAt => $composableBuilder(
-      column: $table.archivedAt, builder: (column) => ColumnFilters(column));
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+      column: $table.deletedAt, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnFilters(column));
@@ -1156,8 +1152,8 @@ class $$CustomersTableOrderingComposer
   ColumnOrderings<String> get phone => $composableBuilder(
       column: $table.phone, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<DateTime> get archivedAt => $composableBuilder(
-      column: $table.archivedAt, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+      column: $table.deletedAt, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnOrderings(column));
@@ -1181,8 +1177,8 @@ class $$CustomersTableAnnotationComposer
   GeneratedColumn<String> get phone =>
       $composableBuilder(column: $table.phone, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get archivedAt => $composableBuilder(
-      column: $table.archivedAt, builder: (column) => column);
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -1235,28 +1231,28 @@ class $$CustomersTableTableManager extends RootTableManager<
             Value<int> id = const Value.absent(),
             Value<String> name = const Value.absent(),
             Value<String?> phone = const Value.absent(),
-            Value<DateTime?> archivedAt = const Value.absent(),
+            Value<DateTime?> deletedAt = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
           }) =>
               CustomersCompanion(
             id: id,
             name: name,
             phone: phone,
-            archivedAt: archivedAt,
+            deletedAt: deletedAt,
             createdAt: createdAt,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
             required String name,
             Value<String?> phone = const Value.absent(),
-            Value<DateTime?> archivedAt = const Value.absent(),
+            Value<DateTime?> deletedAt = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
           }) =>
               CustomersCompanion.insert(
             id: id,
             name: name,
             phone: phone,
-            archivedAt: archivedAt,
+            deletedAt: deletedAt,
             createdAt: createdAt,
           ),
           withReferenceMapper: (p0) => p0

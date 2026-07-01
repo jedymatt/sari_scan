@@ -260,9 +260,9 @@
     "description": "Active customers filter"
   },
 
-  "archived": "Archived",
-  "@archived": {
-    "description": "Archived customers filter"
+  "trash": "Trash",
+  "@trash": {
+    "description": "Trash customers filter"
   },
 
   "addCustomer": "Add Customer",
@@ -340,14 +340,49 @@
     "description": "Generic save button"
   },
 
-  "archive": "Archive",
-  "@archive": {
-    "description": "Archive action"
+  "moveToTrash": "Move to Trash",
+  "@moveToTrash": {
+    "description": "Move a customer to trash"
   },
 
-  "unarchive": "Unarchive",
-  "@unarchive": {
-    "description": "Unarchive action"
+  "restore": "Restore",
+  "@restore": {
+    "description": "Restore a customer from trash"
+  },
+
+  "deletePermanently": "Delete Permanently",
+  "@deletePermanently": {
+    "description": "Permanently delete a trashed customer"
+  },
+
+  "movedToTrash": "Moved to trash",
+  "@movedToTrash": {
+    "description": "Snackbar after moving a customer to trash"
+  },
+
+  "undo": "Undo",
+  "@undo": {
+    "description": "Undo action label"
+  },
+
+  "restored": "Restored",
+  "@restored": {
+    "description": "Snackbar after restoring a customer"
+  },
+
+  "deletesInDays": "{count, plural, =0{Deletes today} =1{Deletes in 1 day} other{Deletes in {count} days}}",
+  "@deletesInDays": {
+    "description": "Countdown until a trashed customer is purged",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "noTrashedCustomers": "Trash is empty",
+  "@noTrashedCustomers": {
+    "description": "Empty state for the trash tab"
   },
 
   "deleteCustomer": "Delete Customer",

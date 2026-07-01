@@ -1,12 +1,16 @@
+import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sari_scan/database.dart' show AppDatabase;
+import 'package:sari_scan/database.dart' show AppDatabase, CustomersCompanion;
 import 'package:sari_scan/db.dart';
 import 'package:sari_scan/models.dart';
 
 void main() {
+  late AppDatabase db;
+
   setUp(() {
-    setDatabaseForTesting(AppDatabase.forTesting(NativeDatabase.memory()));
+    db = AppDatabase.forTesting(NativeDatabase.memory());
+    setDatabaseForTesting(db);
   });
   tearDown(resetDatabaseForTesting);
 
@@ -26,23 +30,32 @@ void main() {
     expect(active.single.balance, 70);
   });
 
-  test('archived customers are excluded from active and shown in archived',
+  test('trashed customers are excluded from active and shown in trash',
       () async {
     final id = await insertCustomer(Customer(name: 'Aling Rosa'));
-    await setCustomerArchived(id, true);
+    await setCustomerTrashed(id, true);
     expect(await queryCustomers(), isEmpty);
-    final archived = await queryCustomers(archived: true);
-    expect(archived, hasLength(1));
-    expect(archived.single.customer.isArchived, isTrue);
+    final trashed = await queryCustomers(trashed: true);
+    expect(trashed, hasLength(1));
+    expect(trashed.single.customer.isTrashed, isTrue);
   });
 
-  test('adding a debt auto-unarchives the customer', () async {
+  test('adding a debt does NOT restore a trashed customer', () async {
     final id = await insertCustomer(Customer(name: 'Aling Rosa'));
-    await setCustomerArchived(id, true);
+    await setCustomerTrashed(id, true);
     await insertEntry(customerId: id, type: UtangType.debt, amount: 50);
-    expect(await queryCustomers(archived: true), isEmpty);
-    final active = await queryCustomers();
-    expect(active.single.balance, 50);
+    // Still trashed; entry recorded but the customer is not auto-restored.
+    expect(await queryCustomers(), isEmpty);
+    final trashed = await queryCustomers(trashed: true);
+    expect(trashed.single.balance, 50);
+  });
+
+  test('restore clears the trashed state', () async {
+    final id = await insertCustomer(Customer(name: 'Aling Rosa'));
+    await setCustomerTrashed(id, true);
+    await setCustomerTrashed(id, false);
+    expect(await queryCustomers(), hasLength(1));
+    expect(await queryCustomers(trashed: true), isEmpty);
   });
 
   test('deleting a customer removes their entries', () async {
@@ -58,7 +71,35 @@ void main() {
     final b = await insertCustomer(Customer(name: 'B'));
     await insertEntry(customerId: a, type: UtangType.debt, amount: 100);
     await insertEntry(customerId: b, type: UtangType.debt, amount: 20);
-    await insertEntry(customerId: b, type: UtangType.payment, amount: 50); // -30
+    await insertEntry(customerId: b, type: UtangType.payment, amount: 50);
     expect(await totalOutstanding(), 100);
+  });
+
+  test('purgeExpiredTrash removes customers trashed past the cutoff', () async {
+    final old = await insertCustomer(Customer(name: 'Old'));
+    await insertEntry(customerId: old, type: UtangType.debt, amount: 100);
+    // Backdate its deletedAt to 31 days ago.
+    await (db.update(db.customers)..where((c) => c.id.equals(old))).write(
+      CustomersCompanion(
+        deletedAt: Value(DateTime.now().subtract(const Duration(days: 31))),
+      ),
+    );
+
+    final purged = await purgeExpiredTrash();
+    expect(purged, 1);
+    expect(await queryCustomers(trashed: true), isEmpty);
+    expect(await queryEntries(old), isEmpty);
+  });
+
+  test('purgeExpiredTrash keeps recently trashed and active customers',
+      () async {
+    final recent = await insertCustomer(Customer(name: 'Recent'));
+    await setCustomerTrashed(recent, true); // deletedAt = now
+    await insertCustomer(Customer(name: 'Active'));
+
+    final purged = await purgeExpiredTrash();
+    expect(purged, 0);
+    expect(await queryCustomers(trashed: true), hasLength(1));
+    expect(await queryCustomers(), hasLength(1));
   });
 }

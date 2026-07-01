@@ -86,33 +86,33 @@ class Customer {
   final int? id;
   final String name;
   final String? phone;
-  final DateTime? archivedAt;
+  final DateTime? deletedAt;
   final DateTime? createdAt;
 
   Customer({
     this.id,
     required this.name,
     this.phone,
-    this.archivedAt,
+    this.deletedAt,
     this.createdAt,
   });
 
-  bool get isArchived => archivedAt != null;
+  bool get isTrashed => deletedAt != null;
 
   Customer copyWith({
     int? id,
     String? name,
     String? phone,
-    DateTime? archivedAt,
+    DateTime? deletedAt,
     DateTime? createdAt,
     bool clearPhone = false,
-    bool clearArchivedAt = false,
+    bool clearDeletedAt = false,
   }) {
     return Customer(
       id: id ?? this.id,
       name: name ?? this.name,
       phone: clearPhone ? null : (phone ?? this.phone),
-      archivedAt: clearArchivedAt ? null : (archivedAt ?? this.archivedAt),
+      deletedAt: clearDeletedAt ? null : (deletedAt ?? this.deletedAt),
       createdAt: createdAt ?? this.createdAt,
     );
   }

@@ -168,7 +168,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get active => 'Active';
 
   @override
-  String get archived => 'Archived';
+  String get trash => 'Trash';
 
   @override
   String get addCustomer => 'Add Customer';
@@ -216,10 +216,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String get save => 'Save';
 
   @override
-  String get archive => 'Archive';
+  String get moveToTrash => 'Move to Trash';
 
   @override
-  String get unarchive => 'Unarchive';
+  String get restore => 'Restore';
+
+  @override
+  String get deletePermanently => 'Delete Permanently';
+
+  @override
+  String get movedToTrash => 'Moved to trash';
+
+  @override
+  String get undo => 'Undo';
+
+  @override
+  String get restored => 'Restored';
+
+  @override
+  String deletesInDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Deletes in $count days',
+      one: 'Deletes in 1 day',
+      zero: 'Deletes today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noTrashedCustomers => 'Trash is empty';
 
   @override
   String get deleteCustomer => 'Delete Customer';

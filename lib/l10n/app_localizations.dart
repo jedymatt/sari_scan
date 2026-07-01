@@ -386,11 +386,11 @@ abstract class AppLocalizations {
   /// **'Active'**
   String get active;
 
-  /// Archived customers filter
+  /// Trash customers filter
   ///
   /// In en, this message translates to:
-  /// **'Archived'**
-  String get archived;
+  /// **'Trash'**
+  String get trash;
 
   /// Add customer title
   ///
@@ -482,17 +482,53 @@ abstract class AppLocalizations {
   /// **'Save'**
   String get save;
 
-  /// Archive action
+  /// Move a customer to trash
   ///
   /// In en, this message translates to:
-  /// **'Archive'**
-  String get archive;
+  /// **'Move to Trash'**
+  String get moveToTrash;
 
-  /// Unarchive action
+  /// Restore a customer from trash
   ///
   /// In en, this message translates to:
-  /// **'Unarchive'**
-  String get unarchive;
+  /// **'Restore'**
+  String get restore;
+
+  /// Permanently delete a trashed customer
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Permanently'**
+  String get deletePermanently;
+
+  /// Snackbar after moving a customer to trash
+  ///
+  /// In en, this message translates to:
+  /// **'Moved to trash'**
+  String get movedToTrash;
+
+  /// Undo action label
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo;
+
+  /// Snackbar after restoring a customer
+  ///
+  /// In en, this message translates to:
+  /// **'Restored'**
+  String get restored;
+
+  /// Countdown until a trashed customer is purged
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Deletes today} =1{Deletes in 1 day} other{Deletes in {count} days}}'**
+  String deletesInDays(int count);
+
+  /// Empty state for the trash tab
+  ///
+  /// In en, this message translates to:
+  /// **'Trash is empty'**
+  String get noTrashedCustomers;
 
   /// Delete customer action
   ///
