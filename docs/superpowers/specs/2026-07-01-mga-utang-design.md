@@ -36,7 +36,8 @@ This feature makes that card live.
 - **Payments:** partial payments supported; balance = Σ debts − Σ payments.
 - **Delete:** always allowed, behind a confirmation dialog (warns if balance outstanding).
 - **Archive:** hides the customer from the default list but keeps all records; restorable.
-  Recording a new utang on an archived customer auto-unarchives them.
+  Modeled as a nullable `archivedAt` timestamp (null = active). Recording a new utang on an
+  archived customer auto-unarchives them (clears `archivedAt`).
 
 ## Data Model (Drift)
 
@@ -49,7 +50,7 @@ class Customers extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get name => text()();
   TextColumn get phone => text().nullable()();
-  BoolColumn get archived => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get archivedAt => dateTime().nullable()(); // null = active, set = archived
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }
 
@@ -98,14 +99,16 @@ list UI renders.
 
 Follows the existing top-level-function + singleton pattern. New functions:
 
-- `queryCustomers({bool archived = false})` → customers matching archived flag, each with a
-  **running balance** computed via a single SQL aggregate join (not one query per customer).
+- `queryCustomers({bool archived = false})` → customers filtered by `archivedAt` (active =
+  null, archived = non-null), each with a **running balance** computed via a single SQL
+  aggregate join (not one query per customer).
 - `insertCustomer(Customer)` / `updateCustomer(Customer)`
 - `deleteCustomer(int id)` → deletes the customer and all their entries.
-- `setCustomerArchived(int id, bool archived)`
+- `setCustomerArchived(int id, bool archived)` → sets `archivedAt` to the current time when
+  archiving, or `null` when unarchiving.
 - `queryEntries(int customerId)` → chronological ledger (newest first).
 - `insertEntry({int customerId, UtangType type, double amount, String? note})` → also
-  clears the customer's `archived` flag when a `debt` is added to an archived customer.
+  clears the customer's `archivedAt` when a `debt` is added to an archived customer.
 - `deleteEntry(int id)`
 - `totalOutstanding()` → sum of balances across active customers, for the list header and
   (optionally) the home card subtitle.
@@ -170,7 +173,7 @@ deleteCustomerConfirm, amount, note, settled, noCustomers.
 - Balance for a customer with no entries is 0 (shown as settled).
 - Payments may exceed debts (overpayment) → negative balance is allowed and displayed
   (store owes/credit); acceptable for MVP, no special handling.
-- Adding a debt to an archived customer auto-unarchives them.
+- Adding a debt to an archived customer auto-unarchives them (clears `archivedAt`).
 
 ## Testing Focus
 
