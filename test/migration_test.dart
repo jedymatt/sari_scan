@@ -52,4 +52,53 @@ void main() {
     expect(utangEntries.single.type, UtangType.debt);
     expect(utangEntries.single.amount, 10.0);
   });
+
+  test('v2 (archived_at) -> v3 renames the column to deleted_at and keeps data',
+      () async {
+    // Build a v2-shaped database by hand, using the OLD column name.
+    final raw = sqlite3.openInMemory();
+    raw.execute('PRAGMA user_version = 2;');
+    raw.execute(
+      'CREATE TABLE "products" ('
+      '"id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, '
+      '"name" TEXT NOT NULL, "price" REAL NOT NULL, "barcode" TEXT NOT NULL);',
+    );
+    raw.execute(
+      'CREATE TABLE "customers" ('
+      '"id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, '
+      '"name" TEXT NOT NULL, "phone" TEXT, '
+      '"archived_at" INTEGER, '
+      '"created_at" INTEGER NOT NULL '
+      "DEFAULT (CAST(strftime('%s', 'now') AS INTEGER)));",
+    );
+    raw.execute(
+      'CREATE TABLE "utang_entries" ('
+      '"id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, '
+      '"customer_id" INTEGER NOT NULL REFERENCES customers (id), '
+      '"type" TEXT NOT NULL, "amount" REAL NOT NULL, "note" TEXT, '
+      '"created_at" INTEGER NOT NULL);',
+    );
+    // A customer already in the trash under the old column name.
+    raw.execute(
+      "INSERT INTO customers (name, phone, archived_at, created_at) "
+      "VALUES ('Old Trashed', NULL, 1700000000, 1700000000);",
+    );
+
+    // Opening AppDatabase over this connection runs onUpgrade(2, 3).
+    final db = AppDatabase.forTesting(NativeDatabase.opened(raw));
+    addTearDown(db.close);
+
+    // The row survives and its trashed timestamp is now readable via deletedAt.
+    final customers = await db.select(db.customers).get();
+    expect(customers, hasLength(1));
+    expect(customers.single.name, 'Old Trashed');
+    expect(customers.single.deletedAt, isNotNull);
+
+    // The renamed column is fully usable (insert an active customer).
+    await db.into(db.customers).insert(CustomersCompanion.insert(name: 'New'));
+    final active = await (db.select(db.customers)
+          ..where((c) => c.deletedAt.isNull()))
+        .get();
+    expect(active.single.name, 'New');
+  });
 }

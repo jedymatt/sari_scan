@@ -43,15 +43,22 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
         onCreate: (m) => m.createAll(),
         onUpgrade: (m, from, to) async {
           if (from < 2) {
+            // v1 had no customer tables; create them with the current schema
+            // (which already uses `deleted_at`).
             await m.createTable(customers);
             await m.createTable(utangEntries);
+          }
+          if (from == 2) {
+            // v2 shipped the soft-delete column as `archived_at`; it was
+            // renamed to `deleted_at` when Archive became Trash.
+            await m.renameColumn(customers, 'archived_at', customers.deletedAt);
           }
         },
       );
