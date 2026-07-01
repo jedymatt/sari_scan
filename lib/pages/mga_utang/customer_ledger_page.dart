@@ -68,6 +68,7 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
         behavior: SnackBarBehavior.floating,
         action: SnackBarAction(
           label: l10n.undo,
+          // Fire-and-forget restore: the list refreshes on its next load (see plan's known UNDO limitation).
           onPressed: () => setCustomerTrashed(customer.id!, false),
         ),
       ),

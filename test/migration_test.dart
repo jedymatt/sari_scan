@@ -36,6 +36,7 @@ void main() {
         );
     final customers = await db.select(db.customers).get();
     expect(customers.single.id, customerId);
+    expect(customers.single.deletedAt, isNull);
 
     // utang_entries table migration is exercised: insert and read back.
     await db.into(db.utangEntries).insert(
