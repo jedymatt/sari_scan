@@ -234,7 +234,6 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
                             return ListTile(
                               contentPadding:
                                   const EdgeInsets.symmetric(vertical: 8),
-                              isThreeLine: entry.note != null,
                               leading: CircleAvatar(
                                 backgroundColor: isDebt
                                     ? colorScheme.errorContainer
@@ -258,24 +257,33 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
                                       : colorScheme.primary,
                                 ),
                               ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (entry.note != null) Text(entry.note!),
-                                  if (entry.note != null &&
-                                      entry.createdAt != null)
-                                    const SizedBox(height: 4),
-                                  if (entry.createdAt != null)
-                                    Text(
-                                      entryDateTimeFormat
-                                          .format(entry.createdAt!),
-                                      style:
-                                          theme.textTheme.bodySmall?.copyWith(
-                                        color: colorScheme.onSurfaceVariant,
-                                      ),
-                                    ),
-                                ],
-                              ),
+                              subtitle:
+                                  entry.note != null ? Text(entry.note!) : null,
+                              trailing: entry.createdAt != null
+                                  ? Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          entryDateFormat
+                                              .format(entry.createdAt!),
+                                          style: theme.textTheme.bodySmall
+                                              ?.copyWith(
+                                            color: colorScheme.onSurfaceVariant,
+                                          ),
+                                        ),
+                                        Text(
+                                          entryTimeFormat
+                                              .format(entry.createdAt!),
+                                          style: theme.textTheme.bodySmall
+                                              ?.copyWith(
+                                            color: colorScheme.onSurfaceVariant,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : null,
                             );
                           },
                         ),

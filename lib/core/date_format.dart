@@ -1,5 +1,7 @@
 import 'package:intl/intl.dart';
 
-/// Formats a ledger entry timestamp as a localized date and time,
-/// e.g. "Jul 1, 2026 2:30 PM".
-final entryDateTimeFormat = DateFormat.yMMMd().add_jm();
+/// Localized calendar date for a ledger entry, e.g. "Jul 1, 2026".
+final entryDateFormat = DateFormat.yMMMd();
+
+/// Localized time of day for a ledger entry, e.g. "2:04 PM".
+final entryTimeFormat = DateFormat.jm();
