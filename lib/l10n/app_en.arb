@@ -223,5 +223,210 @@
   "cebuano": "Cebuano",
   "@cebuano": {
     "description": "Cebuano language option"
+  },
+
+  "mgaUtangSubtitle": "Track customer debts",
+  "@mgaUtangSubtitle": {
+    "description": "Subtitle for the Mga Utang home card"
+  },
+
+  "noCustomersYet": "No customers yet",
+  "@noCustomersYet": {
+    "description": "Empty state title for customer list"
+  },
+
+  "addFirstCustomer": "Add a customer to start tracking utang",
+  "@addFirstCustomer": {
+    "description": "Empty state subtitle"
+  },
+
+  "searchCustomers": "Search customers",
+  "@searchCustomers": {
+    "description": "Customer search hint"
+  },
+
+  "noMatchingCustomers": "No matching customers",
+  "@noMatchingCustomers": {
+    "description": "No search results"
+  },
+
+  "totalOutstanding": "Total Outstanding",
+  "@totalOutstanding": {
+    "description": "Label for total owed"
+  },
+
+  "active": "Active",
+  "@active": {
+    "description": "Active customers filter"
+  },
+
+  "trash": "Trash",
+  "@trash": {
+    "description": "Trash customers filter"
+  },
+
+  "addCustomer": "Add Customer",
+  "@addCustomer": {
+    "description": "Add customer title"
+  },
+
+  "editCustomer": "Edit Customer",
+  "@editCustomer": {
+    "description": "Edit customer title"
+  },
+
+  "customerName": "Name",
+  "@customerName": {
+    "description": "Customer name field label"
+  },
+
+  "pleaseEnterCustomerName": "Please enter a name",
+  "@pleaseEnterCustomerName": {
+    "description": "Name validation error"
+  },
+
+  "phoneOptional": "Phone (optional)",
+  "@phoneOptional": {
+    "description": "Phone field label"
+  },
+
+  "saveCustomer": "Save Customer",
+  "@saveCustomer": {
+    "description": "Save customer button"
+  },
+
+  "addUtang": "Add Utang",
+  "@addUtang": {
+    "description": "Add debt button"
+  },
+
+  "addBayad": "Add Bayad",
+  "@addBayad": {
+    "description": "Add payment button"
+  },
+
+  "balance": "Balance",
+  "@balance": {
+    "description": "Balance label"
+  },
+
+  "settled": "Settled",
+  "@settled": {
+    "description": "Zero balance label"
+  },
+
+  "amount": "Amount",
+  "@amount": {
+    "description": "Amount field label"
+  },
+
+  "pleaseEnterAmount": "Please enter an amount",
+  "@pleaseEnterAmount": {
+    "description": "Amount required error"
+  },
+
+  "pleaseEnterValidAmount": "Enter an amount greater than zero",
+  "@pleaseEnterValidAmount": {
+    "description": "Amount positivity error"
+  },
+
+  "noteOptional": "Note (optional)",
+  "@noteOptional": {
+    "description": "Note field label"
+  },
+
+  "save": "Save",
+  "@save": {
+    "description": "Generic save button"
+  },
+
+  "moveToTrash": "Move to Trash",
+  "@moveToTrash": {
+    "description": "Move a customer to trash"
+  },
+
+  "restore": "Restore",
+  "@restore": {
+    "description": "Restore a customer from trash"
+  },
+
+  "deletePermanently": "Delete Permanently",
+  "@deletePermanently": {
+    "description": "Permanently delete a trashed customer"
+  },
+
+  "movedToTrash": "Moved to trash",
+  "@movedToTrash": {
+    "description": "Snackbar after moving a customer to trash"
+  },
+
+  "undo": "Undo",
+  "@undo": {
+    "description": "Undo action label"
+  },
+
+  "restored": "Restored",
+  "@restored": {
+    "description": "Snackbar after restoring a customer"
+  },
+
+  "deletesInDays": "{count, plural, =0{Deletes today} =1{Deletes in 1 day} other{Deletes in {count} days}}",
+  "@deletesInDays": {
+    "description": "Countdown until a trashed customer is purged",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "noTrashedCustomers": "Trash is empty",
+  "@noTrashedCustomers": {
+    "description": "Empty state for the trash tab"
+  },
+
+  "confirmDeleteCustomer": "Delete {name} and all their utang records?",
+  "@confirmDeleteCustomer": {
+    "description": "Delete confirmation",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+
+  "customerDeleted": "{name} deleted",
+  "@customerDeleted": {
+    "description": "Delete snackbar",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+
+  "outstandingBalanceWarning": "Outstanding balance: {amount}",
+  "@outstandingBalanceWarning": {
+    "description": "Warning shown in delete dialog when customer still has an outstanding balance",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+
+  "noEntriesYet": "No utang or bayad yet",
+  "@noEntriesYet": {
+    "description": "Empty ledger state"
+  },
+
+  "duplicateNameHint": "You already have a customer named \"{name}\". Consider a different nickname, or add a clue to tell them apart (e.g. \"Kuya Jun\", \"Jun tindera\").",
+  "@duplicateNameHint": {
+    "description": "Soft, non-blocking suggestion shown when a new customer name matches an existing one",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   }
 }

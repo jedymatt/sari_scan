@@ -73,8 +73,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                 children: [
                   BarcodeWidget(
                     data: widget.barcode,
-                    barcode:
-                        mobileScannerFormatToBarcodeWidget(widget.format),
+                    barcode: mobileScannerFormatToBarcodeWidget(widget.format),
                     width: 200,
                     height: 80,
                   ),

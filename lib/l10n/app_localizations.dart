@@ -343,6 +343,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cebuano'**
   String get cebuano;
+
+  /// Subtitle for the Mga Utang home card
+  ///
+  /// In en, this message translates to:
+  /// **'Track customer debts'**
+  String get mgaUtangSubtitle;
+
+  /// Empty state title for customer list
+  ///
+  /// In en, this message translates to:
+  /// **'No customers yet'**
+  String get noCustomersYet;
+
+  /// Empty state subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'Add a customer to start tracking utang'**
+  String get addFirstCustomer;
+
+  /// Customer search hint
+  ///
+  /// In en, this message translates to:
+  /// **'Search customers'**
+  String get searchCustomers;
+
+  /// No search results
+  ///
+  /// In en, this message translates to:
+  /// **'No matching customers'**
+  String get noMatchingCustomers;
+
+  /// Label for total owed
+  ///
+  /// In en, this message translates to:
+  /// **'Total Outstanding'**
+  String get totalOutstanding;
+
+  /// Active customers filter
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// Trash customers filter
+  ///
+  /// In en, this message translates to:
+  /// **'Trash'**
+  String get trash;
+
+  /// Add customer title
+  ///
+  /// In en, this message translates to:
+  /// **'Add Customer'**
+  String get addCustomer;
+
+  /// Edit customer title
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Customer'**
+  String get editCustomer;
+
+  /// Customer name field label
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get customerName;
+
+  /// Name validation error
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a name'**
+  String get pleaseEnterCustomerName;
+
+  /// Phone field label
+  ///
+  /// In en, this message translates to:
+  /// **'Phone (optional)'**
+  String get phoneOptional;
+
+  /// Save customer button
+  ///
+  /// In en, this message translates to:
+  /// **'Save Customer'**
+  String get saveCustomer;
+
+  /// Add debt button
+  ///
+  /// In en, this message translates to:
+  /// **'Add Utang'**
+  String get addUtang;
+
+  /// Add payment button
+  ///
+  /// In en, this message translates to:
+  /// **'Add Bayad'**
+  String get addBayad;
+
+  /// Balance label
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get balance;
+
+  /// Zero balance label
+  ///
+  /// In en, this message translates to:
+  /// **'Settled'**
+  String get settled;
+
+  /// Amount field label
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// Amount required error
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter an amount'**
+  String get pleaseEnterAmount;
+
+  /// Amount positivity error
+  ///
+  /// In en, this message translates to:
+  /// **'Enter an amount greater than zero'**
+  String get pleaseEnterValidAmount;
+
+  /// Note field label
+  ///
+  /// In en, this message translates to:
+  /// **'Note (optional)'**
+  String get noteOptional;
+
+  /// Generic save button
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// Move a customer to trash
+  ///
+  /// In en, this message translates to:
+  /// **'Move to Trash'**
+  String get moveToTrash;
+
+  /// Restore a customer from trash
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get restore;
+
+  /// Permanently delete a trashed customer
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Permanently'**
+  String get deletePermanently;
+
+  /// Snackbar after moving a customer to trash
+  ///
+  /// In en, this message translates to:
+  /// **'Moved to trash'**
+  String get movedToTrash;
+
+  /// Undo action label
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo;
+
+  /// Snackbar after restoring a customer
+  ///
+  /// In en, this message translates to:
+  /// **'Restored'**
+  String get restored;
+
+  /// Countdown until a trashed customer is purged
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Deletes today} =1{Deletes in 1 day} other{Deletes in {count} days}}'**
+  String deletesInDays(int count);
+
+  /// Empty state for the trash tab
+  ///
+  /// In en, this message translates to:
+  /// **'Trash is empty'**
+  String get noTrashedCustomers;
+
+  /// Delete confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {name} and all their utang records?'**
+  String confirmDeleteCustomer(String name);
+
+  /// Delete snackbar
+  ///
+  /// In en, this message translates to:
+  /// **'{name} deleted'**
+  String customerDeleted(String name);
+
+  /// Warning shown in delete dialog when customer still has an outstanding balance
+  ///
+  /// In en, this message translates to:
+  /// **'Outstanding balance: {amount}'**
+  String outstandingBalanceWarning(String amount);
+
+  /// Empty ledger state
+  ///
+  /// In en, this message translates to:
+  /// **'No utang or bayad yet'**
+  String get noEntriesYet;
+
+  /// Soft, non-blocking suggestion shown when a new customer name matches an existing one
+  ///
+  /// In en, this message translates to:
+  /// **'You already have a customer named \"{name}\". Consider a different nickname, or add a clue to tell them apart (e.g. \"Kuya Jun\", \"Jun tindera\").'**
+  String duplicateNameHint(String name);
 }
 
 class _AppLocalizationsDelegate

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sari_scan/l10n/app_localizations.dart';
 import 'package:sari_scan/db.dart';
 import 'package:sari_scan/pages/camera_page.dart';
+import 'package:sari_scan/pages/mga_utang/mga_utang_page.dart';
 import 'package:sari_scan/pages/product_management/manage_products_page.dart';
 import 'package:sari_scan/pages/settings_page.dart';
 
@@ -102,8 +103,8 @@ class _HomePageState extends State<HomePage> {
               _ActionCard(
                 icon: Icons.receipt_long,
                 title: l10n.mgaUtang,
-                subtitle: l10n.comingSoon,
-                disabled: true,
+                subtitle: l10n.mgaUtangSubtitle,
+                onTap: () => _navigateAndRefresh(const MgaUtangPage()),
               ),
             ],
           ),
@@ -174,14 +175,12 @@ class _ActionCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final VoidCallback? onTap;
-  final bool disabled;
 
   const _ActionCard({
     required this.icon,
     required this.title,
     required this.subtitle,
     this.onTap,
-    this.disabled = false,
   });
 
   @override
@@ -189,53 +188,46 @@ class _ActionCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return Opacity(
-      opacity: disabled ? 0.5 : 1.0,
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: InkWell(
-          onTap: disabled ? null : onTap,
-          borderRadius: BorderRadius.circular(16),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: colorScheme.primaryContainer,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(icon, color: colorScheme.onPrimaryContainer),
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: colorScheme.primaryContainer,
+                  shape: BoxShape.circle,
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                child: Icon(icon, color: colorScheme.onPrimaryContainer),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
                       ),
-                      Text(
-                        subtitle,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
-                        ),
+                    ),
+                    Text(
+                      subtitle,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                if (!disabled)
-                  Icon(
-                    Icons.chevron_right,
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-              ],
-            ),
+              ),
+              Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant),
+            ],
           ),
         ),
       ),

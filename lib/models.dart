@@ -71,3 +71,74 @@ class Product {
     return id.hashCode ^ name.hashCode ^ price.hashCode ^ barcode.hashCode;
   }
 }
+
+enum UtangType { debt, payment }
+
+double balanceOf(Iterable<UtangEntry> entries) {
+  var total = 0.0;
+  for (final e in entries) {
+    total += e.type == UtangType.debt ? e.amount : -e.amount;
+  }
+  return total;
+}
+
+class Customer {
+  final int? id;
+  final String name;
+  final String? phone;
+  final DateTime? deletedAt;
+  final DateTime? createdAt;
+
+  Customer({
+    this.id,
+    required this.name,
+    this.phone,
+    this.deletedAt,
+    this.createdAt,
+  });
+
+  bool get isTrashed => deletedAt != null;
+
+  Customer copyWith({
+    int? id,
+    String? name,
+    String? phone,
+    DateTime? deletedAt,
+    DateTime? createdAt,
+    bool clearPhone = false,
+    bool clearDeletedAt = false,
+  }) {
+    return Customer(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      phone: clearPhone ? null : (phone ?? this.phone),
+      deletedAt: clearDeletedAt ? null : (deletedAt ?? this.deletedAt),
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+}
+
+class UtangEntry {
+  final int? id;
+  final int customerId;
+  final UtangType type;
+  final double amount;
+  final String? note;
+  final DateTime? createdAt;
+
+  UtangEntry({
+    this.id,
+    required this.customerId,
+    required this.type,
+    required this.amount,
+    this.note,
+    this.createdAt,
+  });
+}
+
+class CustomerWithBalance {
+  final Customer customer;
+  final double balance;
+
+  CustomerWithBalance({required this.customer, required this.balance});
+}

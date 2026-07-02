@@ -146,4 +146,131 @@ class AppLocalizationsCeb extends AppLocalizations {
 
   @override
   String get cebuano => 'Binisaya';
+
+  @override
+  String get mgaUtangSubtitle => 'Subaya ang utang sa mga suki';
+
+  @override
+  String get noCustomersYet => 'Wala pay suki';
+
+  @override
+  String get addFirstCustomer =>
+      'Pagdugang ug suki aron masugdan ang pagsubay sa utang';
+
+  @override
+  String get searchCustomers => 'Pangitaa ang suki';
+
+  @override
+  String get noMatchingCustomers => 'Walay katugbang nga suki';
+
+  @override
+  String get totalOutstanding => 'Kinatibuk-ang Utang';
+
+  @override
+  String get active => 'Aktibo';
+
+  @override
+  String get trash => 'Basura';
+
+  @override
+  String get addCustomer => 'Dugang Suki';
+
+  @override
+  String get editCustomer => 'Usba ang Suki';
+
+  @override
+  String get customerName => 'Ngalan';
+
+  @override
+  String get pleaseEnterCustomerName => 'Palihug pagbutang ug ngalan';
+
+  @override
+  String get phoneOptional => 'Telepono (opsyonal)';
+
+  @override
+  String get saveCustomer => 'I-save ang Suki';
+
+  @override
+  String get addUtang => 'Dugang Utang';
+
+  @override
+  String get addBayad => 'Dugang Bayad';
+
+  @override
+  String get balance => 'Balanse';
+
+  @override
+  String get settled => 'Bayad na';
+
+  @override
+  String get amount => 'Kantidad';
+
+  @override
+  String get pleaseEnterAmount => 'Palihug pagbutang ug kantidad';
+
+  @override
+  String get pleaseEnterValidAmount =>
+      'Pagbutang ug kantidad nga labaw sa zero';
+
+  @override
+  String get noteOptional => 'Nota (opsyonal)';
+
+  @override
+  String get save => 'I-save';
+
+  @override
+  String get moveToTrash => 'Ibutang sa Basura';
+
+  @override
+  String get restore => 'Ibalik';
+
+  @override
+  String get deletePermanently => 'Papasa Permanente';
+
+  @override
+  String get movedToTrash => 'Gibutang sa basura';
+
+  @override
+  String get undo => 'Baw-ion';
+
+  @override
+  String get restored => 'Gibalik';
+
+  @override
+  String deletesInDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Mapapas sa $count ka adlaw',
+      one: 'Mapapas sa 1 ka adlaw',
+      zero: 'Mapapas karon',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noTrashedCustomers => 'Walay sulod ang basura';
+
+  @override
+  String confirmDeleteCustomer(String name) {
+    return 'Papason si $name ug tanan niyang utang?';
+  }
+
+  @override
+  String customerDeleted(String name) {
+    return 'Gipapas si $name';
+  }
+
+  @override
+  String outstandingBalanceWarning(String amount) {
+    return 'Nabiling utang: $amount';
+  }
+
+  @override
+  String get noEntriesYet => 'Wala pay utang o bayad';
+
+  @override
+  String duplicateNameHint(String name) {
+    return 'Naa na kay kustomer nga ginganlag \"$name\". Pwede kag laing angga, o pagdugang ilhanan aron dili sila magkalibog (pananglitan \"Kuya Jun\", \"Jun tindera\").';
+  }
 }

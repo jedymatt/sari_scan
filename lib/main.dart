@@ -4,12 +4,14 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sari_scan/pages/home_page.dart';
 import 'package:sari_scan/l10n/app_localizations.dart';
+import 'package:sari_scan/db.dart';
 
 const _themeModeKey = 'theme_mode';
 const _localeKey = 'locale';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await purgeExpiredTrash();
   runApp(const MyApp());
 }
 
