@@ -30,6 +30,34 @@ void main() {
     expect(active.single.balance, 70);
   });
 
+  test('centavo amounts settle to exactly zero in the customer list',
+      () async {
+    final id = await insertCustomer(Customer(name: 'Aling Rosa'));
+    await insertEntry(customerId: id, type: UtangType.debt, amount: 10.10);
+    await insertEntry(customerId: id, type: UtangType.debt, amount: 20.20);
+    await insertEntry(customerId: id, type: UtangType.payment, amount: 30.30);
+    final active = await queryCustomers();
+    expect(active.single.balance, 0);
+  });
+
+  test('getCustomer finds active and trashed customers by id', () async {
+    final id = await insertCustomer(Customer(name: 'Aling Rosa'));
+    expect((await getCustomer(id))?.name, 'Aling Rosa');
+    await setCustomerTrashed(id, true);
+    expect((await getCustomer(id))?.isTrashed, isTrue);
+  });
+
+  test('getCustomer returns null for an unknown id', () async {
+    expect(await getCustomer(999), isNull);
+  });
+
+  test('customer list sorts alphabetically ignoring case', () async {
+    await insertCustomer(Customer(name: 'Ben'));
+    await insertCustomer(Customer(name: 'ana'));
+    final active = await queryCustomers();
+    expect(active.map((c) => c.customer.name).toList(), ['ana', 'Ben']);
+  });
+
   test('trashed customers are excluded from active and shown in trash',
       () async {
     final id = await insertCustomer(Customer(name: 'Aling Rosa'));

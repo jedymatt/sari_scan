@@ -74,12 +74,20 @@ class Product {
 
 enum UtangType { debt, payment }
 
+const _centavosPerPeso = 100;
+
+/// Rounds a peso amount to whole centavos, discarding binary floating-point
+/// residue so settled balances compare equal to zero.
+double roundToCentavos(double amount) {
+  return (amount * _centavosPerPeso).roundToDouble() / _centavosPerPeso;
+}
+
 double balanceOf(Iterable<UtangEntry> entries) {
   var total = 0.0;
   for (final e in entries) {
     total += e.type == UtangType.debt ? e.amount : -e.amount;
   }
-  return total;
+  return roundToCentavos(total);
 }
 
 class Customer {

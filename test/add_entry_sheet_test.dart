@@ -33,4 +33,20 @@ void main() {
     await tester.pump();
     expect(find.text('Enter an amount greater than zero'), findsOneWidget);
   });
+
+  testWidgets('rejects NaN pasted into the amount field', (tester) async {
+    await tester.pumpWidget(_wrap(const AddEntryForm(type: UtangType.debt)));
+    await tester.enterText(find.byType(TextFormField).first, 'NaN');
+    await tester.tap(find.byType(FilledButton));
+    await tester.pump();
+    expect(find.text('Enter an amount greater than zero'), findsOneWidget);
+  });
+
+  testWidgets('rejects Infinity pasted into the amount field', (tester) async {
+    await tester.pumpWidget(_wrap(const AddEntryForm(type: UtangType.debt)));
+    await tester.enterText(find.byType(TextFormField).first, 'Infinity');
+    await tester.tap(find.byType(FilledButton));
+    await tester.pump();
+    expect(find.text('Enter an amount greater than zero'), findsOneWidget);
+  });
 }

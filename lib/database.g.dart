@@ -1075,8 +1075,7 @@ final class $$CustomersTableReferences
   static MultiTypedResultKey<$UtangEntriesTable, List<UtangEntry>>
       _utangEntriesRefsTable(_$AppDatabase db) =>
           MultiTypedResultKey.fromTable(db.utangEntries,
-              aliasName: $_aliasNameGenerator(
-                  db.customers.id, db.utangEntries.customerId));
+              aliasName: 'customers__id__utang_entries__customer_id');
 
   $$UtangEntriesTableProcessedTableManager get utangEntriesRefs {
     final manager = $$UtangEntriesTableTableManager($_db, $_db.utangEntries)
@@ -1324,8 +1323,7 @@ final class $$UtangEntriesTableReferences
   $$UtangEntriesTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static $CustomersTable _customerIdTable(_$AppDatabase db) =>
-      db.customers.createAlias(
-          $_aliasNameGenerator(db.utangEntries.customerId, db.customers.id));
+      db.customers.createAlias('utang_entries__customer_id__customers__id');
 
   $$CustomersTableProcessedTableManager get customerId {
     final $_column = $_itemColumn<int>('customer_id')!;

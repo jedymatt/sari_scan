@@ -28,6 +28,17 @@ void main() {
       );
     });
 
+    test('centavo amounts settle to exactly zero (no float residue)', () {
+      expect(
+        balanceOf([
+          _entry(UtangType.debt, 10.10),
+          _entry(UtangType.debt, 20.20),
+          _entry(UtangType.payment, 30.30),
+        ]),
+        0,
+      );
+    });
+
     test('overpayment goes negative', () {
       expect(
         balanceOf([_entry(UtangType.debt, 20), _entry(UtangType.payment, 30)]),
