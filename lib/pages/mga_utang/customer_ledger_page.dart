@@ -28,16 +28,11 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
   }
 
   Future<void> _load() async {
-    // A customer is in exactly one of the active/trash lists.
-    final active = await queryCustomers();
-    final trashed = await queryCustomers(trashed: true);
-    final match = [...active, ...trashed]
-        .where((c) => c.customer.id == widget.customerId)
-        .toList();
+    final customer = await getCustomer(widget.customerId);
     final entries = await queryEntries(widget.customerId);
     if (!mounted) return;
     setState(() {
-      _customer = match.isEmpty ? null : match.first.customer;
+      _customer = customer;
       _entries = entries;
     });
   }
@@ -57,23 +52,11 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
   }
 
   Future<void> _moveToTrash() async {
-    final l10n = AppLocalizations.of(context)!;
-    final messenger = ScaffoldMessenger.of(context);
     final customer = _customer!;
     await setCustomerTrashed(customer.id!, true);
     if (!mounted) return;
-    messenger.showSnackBar(
-      SnackBar(
-        content: Text(l10n.movedToTrash),
-        behavior: SnackBarBehavior.floating,
-        action: SnackBarAction(
-          label: l10n.undo,
-          // Fire-and-forget restore: the list refreshes on its next load (see plan's known UNDO limitation).
-          onPressed: () => setCustomerTrashed(customer.id!, false),
-        ),
-      ),
-    );
-    Navigator.of(context).pop();
+    // The list page owns the undo snackbar so it can reload after a restore.
+    Navigator.of(context).pop(customer.id);
   }
 
   Future<void> _restore() async {
@@ -151,6 +134,7 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context);
     final customer = _customer;
 
     return Scaffold(
@@ -327,7 +311,7 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
                                           CrossAxisAlignment.end,
                                       children: [
                                         Text(
-                                          entryDateFormat
+                                          entryDateFormat(locale)
                                               .format(entry.createdAt!),
                                           style: theme.textTheme.bodySmall
                                               ?.copyWith(
@@ -335,7 +319,7 @@ class _CustomerLedgerPageState extends State<CustomerLedgerPage> {
                                           ),
                                         ),
                                         Text(
-                                          entryTimeFormat
+                                          entryTimeFormat(locale)
                                               .format(entry.createdAt!),
                                           style: theme.textTheme.bodySmall
                                               ?.copyWith(

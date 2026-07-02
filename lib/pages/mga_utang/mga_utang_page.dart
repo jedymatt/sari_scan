@@ -56,12 +56,31 @@ class _MgaUtangPageState extends State<MgaUtangPage> {
   }
 
   Future<void> _openLedger(int customerId) async {
-    await Navigator.of(context).push<bool>(
+    // The ledger pops with the customer's id when it moved them to trash.
+    final trashedId = await Navigator.of(context).push<int>(
       MaterialPageRoute(
         builder: (context) => CustomerLedgerPage(customerId: customerId),
       ),
     );
-    _load();
+    await _load();
+    if (trashedId != null && mounted) _showMovedToTrashSnackBar(trashedId);
+  }
+
+  void _showMovedToTrashSnackBar(int customerId) {
+    final l10n = AppLocalizations.of(context)!;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(l10n.movedToTrash),
+        behavior: SnackBarBehavior.floating,
+        action: SnackBarAction(
+          label: l10n.undo,
+          onPressed: () async {
+            await setCustomerTrashed(customerId, false);
+            _load();
+          },
+        ),
+      ),
+    );
   }
 
   @override
@@ -104,7 +123,12 @@ class _MgaUtangPageState extends State<MgaUtangPage> {
                   ],
                   selected: {_showTrash},
                   onSelectionChanged: (selection) {
-                    setState(() => _showTrash = selection.first);
+                    setState(() {
+                      _showTrash = selection.first;
+                      // Drop the other tab's list so stale rows never
+                      // render while the reload is in flight.
+                      _customers = null;
+                    });
                     _load();
                   },
                 ),
@@ -163,6 +187,7 @@ class _MgaUtangPageState extends State<MgaUtangPage> {
                               itemBuilder: (context, index) {
                                 final item = filtered[index];
                                 final owing = item.balance > 0;
+                                final deletedAt = item.customer.deletedAt;
                                 return Card(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12)),
@@ -182,10 +207,10 @@ class _MgaUtangPageState extends State<MgaUtangPage> {
                                     subtitle: item.customer.phone != null
                                         ? Text(item.customer.phone!)
                                         : null,
-                                    trailing: _showTrash
+                                    trailing: deletedAt != null
                                         ? Text(
                                             l10n.deletesInDays(daysUntilPurge(
-                                              item.customer.deletedAt!,
+                                              deletedAt,
                                               DateTime.now(),
                                             )),
                                             style: theme.textTheme.bodySmall

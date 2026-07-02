@@ -9,10 +9,25 @@ import 'package:sari_scan/db.dart';
 const _themeModeKey = 'theme_mode';
 const _localeKey = 'locale';
 
-Future<void> main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  await purgeExpiredTrash();
+  // Fire-and-forget: cleanup must never delay or crash app launch. The
+  // trash tab purges again on open, so a failed pass here loses nothing.
+  purgeTrashAtStartup();
   runApp(const MyApp());
+}
+
+/// Best-effort trash purge that reports failures instead of throwing.
+Future<void> purgeTrashAtStartup() async {
+  try {
+    await purgeExpiredTrash();
+  } catch (e, stack) {
+    FlutterError.reportError(FlutterErrorDetails(
+      exception: e,
+      stack: stack,
+      context: ErrorDescription('purging expired trash at startup'),
+    ));
+  }
 }
 
 class MyApp extends StatefulWidget {

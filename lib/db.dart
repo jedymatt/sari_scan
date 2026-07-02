@@ -65,30 +65,40 @@ Future<void> deleteProduct(int id) async {
 Future<List<models.CustomerWithBalance>> queryCustomers(
     {bool trashed = false}) async {
   final db = _getDatabase();
+  final customers = db.customers;
+  final entries = db.utangEntries;
 
-  final query = db.select(db.customers)
-    ..where((c) => trashed ? c.deletedAt.isNotNull() : c.deletedAt.isNull())
-    ..orderBy([(c) => OrderingTerm.asc(c.name)]);
-  final customerRows = await query.get();
-  if (customerRows.isEmpty) return [];
+  final debtSum = entries.amount
+      .sum(filter: entries.type.equalsValue(models.UtangType.debt));
+  final paymentSum = entries.amount
+      .sum(filter: entries.type.equalsValue(models.UtangType.payment));
+  final balance = coalesce([debtSum, const Constant(0.0)]) -
+      coalesce([paymentSum, const Constant(0.0)]);
 
-  final ids = customerRows.map((c) => c.id).toList();
-  final entryRows = await (db.select(db.utangEntries)
-        ..where((e) => e.customerId.isIn(ids)))
-      .get();
+  final query = db.select(customers).join([
+    leftOuterJoin(entries, entries.customerId.equalsExp(customers.id),
+        useColumns: false),
+  ])
+    ..where(trashed ? customers.deletedAt.isNotNull() : customers.deletedAt.isNull())
+    ..groupBy([customers.id])
+    ..orderBy([OrderingTerm.asc(customers.name.collate(Collate.noCase))])
+    ..addColumns([balance]);
 
-  final entriesByCustomer = <int, List<models.UtangEntry>>{};
-  for (final row in entryRows) {
-    entriesByCustomer.putIfAbsent(row.customerId, () => []).add(_toEntry(row));
-  }
-
-  return customerRows.map((row) {
-    final entries = entriesByCustomer[row.id] ?? const [];
+  final rows = await query.get();
+  return rows.map((row) {
     return models.CustomerWithBalance(
-      customer: _toCustomer(row),
-      balance: models.balanceOf(entries),
+      customer: _toCustomer(row.readTable(customers)),
+      balance: models.roundToCentavos(row.read(balance) ?? 0),
     );
   }).toList();
+}
+
+/// Looks up a single customer by id, whether active or trashed.
+Future<models.Customer?> getCustomer(int id) async {
+  final db = _getDatabase();
+  final row = await (db.select(db.customers)..where((c) => c.id.equals(id)))
+      .getSingleOrNull();
+  return row == null ? null : _toCustomer(row);
 }
 
 /// Returns the names of all active (non-trashed) customers, optionally

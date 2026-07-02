@@ -85,7 +85,10 @@ class _AddEntryFormState extends State<AddEntryForm> {
                 if (text.isEmpty) return l10n.pleaseEnterAmount;
                 final parsed = double.tryParse(text);
                 if (parsed == null) return l10n.pleaseEnterValidNumber;
-                if (parsed <= 0) return l10n.pleaseEnterValidAmount;
+                // NaN/Infinity parse successfully but fail every <= check.
+                if (!parsed.isFinite || parsed <= 0) {
+                  return l10n.pleaseEnterValidAmount;
+                }
                 return null;
               },
             ),
